@@ -12,6 +12,7 @@
   hosts: deathstar
 
   roles:
+    - development
     - local_accts
     - fail2ban
     - mfa

@@ -6,6 +6,7 @@
   with_items:
     - epel-release
     - git
+    - screen
     - tmux
     - vim
   tags:
