@@ -1,0 +1,12 @@
+---
+- name: install common packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - epel-release
+    - git
+    - tmux
+    - vim
+  tags:
+    - packages

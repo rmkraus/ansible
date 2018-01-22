@@ -1,0 +1,93 @@
+- name: ensure local user groups exist
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid }}"
+  with_items: "{{ local_accts_groups }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - groups
+
+- name: ensure local user accounts exist
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    shell: "{{ item.shell }}"
+    comment: "{{ item.gecos }}"
+    group: "{{ item.group }}"
+    password: "{{ item.password }}"
+    home: "{{ item.home }}"
+    createhome: yes
+    state: present
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - users
+
+- name: ensure local users are in the proper groups
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    append: yes
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - users
+    - groups
+
+- name: ensure user has an ssh directory
+  file:
+    path: "{{ item.home }}/.ssh"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0700"
+    state: directory
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - users
+
+- name: verify local user's authorized keys
+  include_tasks: auth_keys_inner.yml
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    loop_var: user
+    label: "{{ user.name }}"
+  tags:
+    - local_accts
+    - users
+
+- name: verify local user's private key
+  copy:
+    content: "{{ item.id_rsa }}"
+    dest: "{{ item.home }}/.ssh/id_rsa"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0600"
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - users
+
+- name: verify local user's bashrc file
+  copy:
+    content: "{{ item.bashrc }}"
+    dest: "{{ item.home }}/.bashrc"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0750"
+  with_items: "{{ local_accts_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - local_accts
+    - users

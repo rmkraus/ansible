@@ -1,0 +1,13 @@
+---
+- name: verify local user's authorized keys
+  lineinfile:
+    path: "{{ user.home }}/.ssh/authorized_keys"
+    line: "{{ item }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: "0600"
+    create: yes
+  with_items: "{{ user.authorized_keys }}"
+  tags:
+    - local_accts
+    - users

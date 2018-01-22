@@ -1,0 +1,31 @@
+---
+- name: ensure authenticator is installed
+  yum:
+    name: google-authenticator
+    state: installed
+  tags: mfa
+
+- name: ensure mfa keys are installed
+  copy:
+    dest: "{{ item.dest }}"
+    content: "{{ item.key }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "0400"
+  with_items: "{{ mfa_keys }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  tags: mfa
+
+- name: ensure mfa is enabled for sshd
+  lineinfile:
+    line: "{{ item.line }}"
+    dest: "{{ item.dest }}"
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - { line: "PasswordAuthentication yes", dest: "/etc/ssh/sshd_config", regexp: "^PasswordAuthentication" }
+    - { line: "UsePAM yes", dest: "/etc/ssh/sshd_config", regexp: "^UsePAM" }
+    - { line: "auth required pam_google_authenticator.so nullok", dest: "/etc/pam.d/sshd", regexp: "^auth required pam_google_authenticator.so" }
+    - { line: "ChallengeResponseAuthentication yes", dest: "/etc/ssh/sshd_config", regexp: "^ChallengeResponseAuthentication" }
+  notify: restart sshd
+  tags: mfa

@@ -1,0 +1,17 @@
+#!/usr/bin/ansible-playbook --vault-password-file=~/.ansible-vault-pass
+---
+
+- name: common tasks
+  hosts: all
+
+  roles:
+    - common
+    - sshd
+
+- name: deathstar
+  hosts: deathstar
+
+  roles:
+    - local_accts
+    - fail2ban
+    - mfa
