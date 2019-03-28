@@ -1,2 +1,5 @@
 ---
 # defaults file for dns_records
+dns_records_primary_forward_zone: 'example.com'
+dns_records_primary_reverse_zone: '1.168.196.in-addr.arpa'
+dns_records_custom_records: []

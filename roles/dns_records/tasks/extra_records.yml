@@ -1,0 +1,18 @@
+- name: insert custom defined records
+  nsupdate:
+    server: "{{ domain_services.dns.server }}"
+    record: "{{ item.name }}"
+    type: "{{ item.type | default('A') }}"
+    value: "{{ item.value }}"
+    key_algorithm: "{{ domain_services.dns.algorithm }}"
+    key_secret: "{{ domain_services.dns.secret }}"
+    key_name: '{{ domain_services.dns.key_name }}'
+    zone: '{{ item.zone }}'
+    state: '{{ item.state | default("present") }}'
+  delegate_to: localhost
+  loop: '{{ dns_records_custom_records }}'
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - dns_records
+    - dns

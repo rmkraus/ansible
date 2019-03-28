@@ -38,8 +38,13 @@
         - dhcp
 
     - role: dns_records
+      tags:
+        - dns
 
-    # dnsupdate
-    # cobbler system add
+    - role: pxe_boot
+      pxe_boot_netboot: yes
+      tags:
+        - pxe
+
     # reboot if ipmi
     # go to site.yml?

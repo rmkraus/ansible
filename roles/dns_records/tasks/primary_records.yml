@@ -1,0 +1,47 @@
+---
+# tasks file for dns_records
+- name: set primary dns forward record
+  nsupdate:
+    server: "{{ domain_services.dns.server }}"
+    record: "{{ inventory_hostname.split('.').0 }}"
+    type: "A"
+    value: "{{ unifi_ip }}"
+    key_algorithm: "{{ domain_services.dns.algorithm }}"
+    key_secret: "{{ domain_services.dns.secret }}"
+    key_name: '{{ domain_services.dns.key_name }}'
+    zone: '{{ dns_records_primary_forward_zone }}'
+    state: present
+  delegate_to: localhost
+  when:
+    - unifi_ip is not undefined
+  tags:
+    - dns_records
+    - dns
+
+- name: determine reverse record name
+  set_fact:
+    dns_records_reverse: "{{ unifi_ip.split('.').3 + '.' + unifi_ip.split('.').2 + '.' + unifi_ip.split('.').1 + '.' + unifi_ip.split('.').0 + '.in-addr.arpa' }}"
+  delegate_to: localhost
+  when:
+    - unifi_ip is not undefined
+  tags:
+    - dns_records
+    - dns
+
+- name: set primary dns reverse record
+  nsupdate:
+    server: "{{ domain_services.dns.server }}"
+    record: "{{ dns_records_reverse | replace('.' + dns_records_primary_reverse_zone, '') }}"
+    type: "PTR"
+    value: "{{ inventory_hostname.split('.').0 + '.' + dns_records_primary_forward_zone }}."
+    key_algorithm: "{{ domain_services.dns.algorithm }}"
+    key_secret: "{{ domain_services.dns.secret }}"
+    key_name: '{{ domain_services.dns.key_name }}'
+    zone: '{{ dns_records_primary_reverse_zone }}'
+    state: present
+  delegate_to: localhost
+  when:
+    - unifi_ip is not undefined
+  tags:
+    - dns_records
+    - dns

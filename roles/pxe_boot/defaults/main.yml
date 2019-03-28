@@ -1,0 +1,3 @@
+---
+# defaults file for pxe_boot
+pxe_boot_netboot: no

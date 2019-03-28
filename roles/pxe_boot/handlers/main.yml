@@ -1,0 +1,9 @@
+---
+# handlers file for pxe_boot
+- name: cobbler sync
+  cobbler_sync:
+    host: "{{ domain_services.cobbler.server }}"
+    username: "{{ domain_services.cobbler.user }}"
+    password: "{{ domain_services.cobbler.password }}"
+    use_ssl: yes
+  delegate_to: localhost

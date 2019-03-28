@@ -46,7 +46,7 @@ domain_services:
     key_name: update-key
 usergroup: 'Lab'
 dns_records_primary_forward_zone: 'lab.rmkra.us'
-dns_records_primary_reverse_zone: '4.168.196.in-addr.arpa'
+dns_records_primary_reverse_zone: '4.168.192.in-addr.arpa'
 
 ## Lynis Security Scanning configuration
 lynis_global_exceptions:
