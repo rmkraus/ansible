@@ -1,0 +1,12 @@
+---
+- name: logout
+  uri:
+    url: https://{{ unifi_server }}/api/logout
+    method: POST
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi

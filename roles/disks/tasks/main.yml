@@ -1,0 +1,47 @@
+---
+# tasks file for disks
+- name: ensure all drive partitions exist
+  parted:
+    align: optimal
+    device: "{{ item.0.device }}"
+    label: msdos
+    number: "{{ item.1.id }}"
+    part_start: "{{ item.1.start }}"
+    part_end: "{{ item.1.end }}"
+    part_type: primary
+    state: present
+    unit: '%'
+  loop: "{{ disks | subelements('partitions') }}"
+  loop_control:
+    label: "{{ item.0.device }} - Partition {{ item.1.id }}"
+  tags:
+    - disks
+    - filesystem
+
+- name: ensure all partitions are formated
+  filesystem:
+    dev: "{{ item.0.device }}{{ item.1.id }}"
+    force: no
+    fstype: "{{ item.1.fstype }}"
+    resizefs: no
+  loop: "{{ disks | subelements('partitions') }}"
+  loop_control:
+    label: "{{ item.0.device }} - Partition {{ item.1.id }}"
+  tags:
+    - disks
+    - filesystem
+
+- name: ensure all partitions are mounted
+  mount:
+    boot: yes
+    fstype: "{{ item.1.fstype }}"
+    path: "{{ item.1.mount }}"
+    src: "{{ item.0.device }}{{ item.1.id }}"
+    state: mounted
+  loop: "{{ disks | subelements('partitions') }}"
+  loop_control:
+    label: "{{ item.0.device }} - Partition {{ item.1.id }}"
+  when: "'mount' in item.1"
+  tags:
+    - disks
+    - filesystem

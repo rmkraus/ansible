@@ -1,0 +1,114 @@
+---
+# tasks file for hardening
+
+- name: ensure selinux is configured
+  lineinfile:
+    line: "SELINUX={{hardening_selinux}}"
+    dest: /etc/selinux/config
+    regexp: "^SELINUX="
+  notify: reboot host
+  tags:
+    - hardening
+    - config
+    - selinux
+
+- name: Ensure password aging is configured
+  lineinfile:
+    line: "{{ item.line }}"
+    dest: /etc/login.defs
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - { "line": "PASS_MIN_DAYS   {{ hardening_pass_min_days }}", "regexp": "^PASS_MIN_DAYS" }
+    - { "line": "PASS_MAX_DAYS   {{ hardening_pass_max_days }}", "regexp": "^PASS_MAX_DAYS" }
+    - { "line": "PASS_MIN_LEN    {{ hardening_pass_min_len }}", "regexp": "^PASS_MIN_LEN" }
+  tags:
+    - hardening
+    - config
+
+- name: Ensure the default profile is secure
+  lineinfile:
+    line: "umask 027"
+    dest: /etc/profile.d/custom.sh
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+  tags:
+    - hardening
+    - config
+
+- name: Ensure the kernel has been hardened
+  template:
+    src: sysctl-hardening.j2
+    dest: /etc/sysctl.d/99-hardening.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: reboot host
+  tags:
+    - hardening
+    - config
+
+- name: Ensure USB Storage devices are blocked (except on rPis)
+  lineinfile:
+    line: "blacklist {{ item }}"
+    dest: "/etc/modprobe.d/99-custom.conf"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+  with_items:
+    - usb_storage
+  notify: reboot host
+  when:
+    - not ( ansible_architecture == "armv7l" and
+            ansible_bios_date == "NA" and
+            ansible_bios_version == "NA" and
+            ansible_system_vendor == "NA" )
+    - not hardening_allow_usb_drives
+  tags:
+    - hardening
+    - config
+
+- name: Ensure unused filesystems are blocked
+  lineinfile:
+    line: "blacklist {{ item }}"
+    dest: "/etc/modprobe.d/99-custom.conf"
+    owner: root
+    group: root
+    mode: 0644
+    create: yes
+  with_items:
+    - hfs
+    - hfsplus
+    - jffs2
+    - squashfs
+    - udf
+    - fuse
+  notify: reboot host
+  tags:
+    - hardening
+    - config
+
+- name: Ensure proper system auditing
+  template:
+    src: audit.rules.j2
+    dest: /etc/audit/rules.d/audit.rules
+    owner: root
+    group: root
+    mode: 0640
+  notify: reboot host
+  tags:
+    - hardening
+    - config
+
+- name: Ensure core dumps are disabled
+  lineinfile:
+    line: "{{ item }}"
+    dest: /etc/security/limits.conf
+  with_items:
+    - "* soft core 0"
+    - "* hard core 0"
+  tags:
+    - hardening
+    - config

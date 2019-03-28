@@ -1,0 +1,27 @@
+#!/usr/bin/ansible-playbook
+---
+- name: test nsupdate
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    dns_server: 192.168.4.4
+    dns_key: 'ZE7Hs/ngKSJNqaBCkhPKRQ=='
+    dns_key_algorithm: 'hmac-sha256'
+    record:
+      name: asdf2.lab.rmkra.us
+      type: A
+      value: 8.8.8.8
+
+  tasks:
+    - name: send update
+      nsupdate:
+        server: "{{ dns_server }}"
+        record: "asdf"
+        type: "{{ record.type }}"
+        value: "{{ record.value }}"
+        key_algorithm: "{{ dns_key_algorithm }}"
+        key_secret: "{{ dns_key }}"
+        key_name: 'update-key'
+        zone: 'lab.rmkra.us.'
+        state: absent

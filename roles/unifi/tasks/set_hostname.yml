@@ -1,0 +1,27 @@
+---
+- name: set unifi hostname
+  uri:
+    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/rest/user/{{ unifi_host_id }}
+    method: PUT
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+    body:
+      name: "{{ inventory_hostname }}"
+    body_format: json
+  when: "unifi_name != inventory_hostname"
+  register: unifi_action
+  changed_when: unifi_action.status == 200
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: update unifi meta data
+  set_fact:
+    unifi_name: "{{ inventory_hostname }}"
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+

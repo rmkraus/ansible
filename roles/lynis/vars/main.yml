@@ -1,0 +1,7 @@
+---
+# vars file for lynis
+lynis_name: CISOfy Software - Lynis package
+lynis_baseurl: https://packages.cisofy.com/community/lynis/rpm/
+lynis_gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
+lynis_exceptions: "{{ lynis_global_exceptions + lynis_group_exceptions + lynis_host_exceptions + lynis_os_exceptions[ansible_distribution][ansible_distribution_major_version] }}"
+

@@ -1,0 +1,6 @@
+---
+# defaults file for unifi-login
+unifi_server: localhost:8443
+unifi_user: ubnt
+unifi_pass: password
+unifi_site: default

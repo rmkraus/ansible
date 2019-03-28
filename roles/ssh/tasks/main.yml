@@ -1,0 +1,36 @@
+---
+# tasks file for ssh
+- name: Ensure the ssh server is configured
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart service
+  tags:
+    - ssh
+    - config
+
+- name: Ensure SSH banner is set
+  template:
+    src: "issue.net.j2"
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - ssh
+    - config
+
+- name: Ensure terminal banner matches ssh banner
+  template:
+    src: "issue.net.j2"
+    dest: /etc/issue
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - ssh
+    - config
+

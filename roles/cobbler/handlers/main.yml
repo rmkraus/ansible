@@ -1,0 +1,29 @@
+---
+# handlers file for cobbler
+- name: restart cobblerd
+  service:
+    name: cobblerd
+    state: restarted
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted
+
+- name: update cobbler loaders
+  command: cobbler get-loaders
+  listen: update cobbler
+
+- name: update cobbler signature
+  command: cobbler signature update
+  listen: update cobbler
+
+- name: install dummy iso
+  command: "/usr/bin/cobbler image add --name=dummy --file={{ ansible_deps_artifacts }}/cobbler/dummy.iso --clobber"
+
+- name: cobbler sync
+  cobbler_sync:
+    host: "{{ cobbler_server }}"
+    username: "{{ cobbler_user }}"
+    password: "{{ cobbler_password }}"
+    use_ssl: yes

@@ -1,0 +1,78 @@
+---
+# tasks file for bind
+
+- name: ensure bind is installed
+  yum:
+    name: "bind, bind-utils"
+    state: installed
+  tags:
+    - bind
+    - packages
+
+- name: ensure bind is configured
+  template:
+    src: named.conf.j2
+    dest: /etc/named.conf
+  notify: restart bind
+  tags:
+    - bind
+    - config
+
+- name: ensure a zone file exists on master
+  stat:
+    path: '/var/named/{{ item.name }}'
+  loop: "{{ bind_zones }}"
+  register: bind_master_zone_files
+  when:
+    - inventory_hostname == bind_master
+    - item.type == 'master'
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - bind
+    - config
+
+- debug:
+    msg: "{{ bind_master_zone_files }}"
+  tags:
+    - bind
+    - config
+
+- name: install blank zone templates as needed
+  template:
+    dest: "/var/named/{{ item.item.name }}"
+    src: named.zone.j2
+    owner: named
+    group: named
+    mode: 0640
+  loop: "{{ bind_master_zone_files.results }}"
+  when:
+    - "not 'skipped' in item"
+    - "not item.stat.exists"
+  loop_control:
+    label: "{{ item.item.name }}"
+  tags:
+    - bind
+    - config
+
+- name: ensure bind is running and enabled
+  service:
+    name: named
+    state: started
+    enabled: yes
+  tags:
+    - bind
+    - services
+
+- name: ensure the firewall allows bind traffic
+  firewalld:
+    port: "{{ item }}"
+    immediate: yes
+    permanent: yes
+    state: enabled
+  with_items:
+    - 53/tcp
+    - 53/udp
+  tags:
+    - bind
+    - firewall

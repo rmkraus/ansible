@@ -1,0 +1,4 @@
+---
+# defaults file for root-user
+root_user_ssh_authorized_keys: []
+root_user_password: "$6$V6cfUJw59iPdPwy.$uBnkpTtpEV7iCA4jF2a2YBtwSQCbVijm8P9zkltK2SLnpU8R54pPBUu04CtRFhKJS1cLp9YKmkgIxnfq0wGVJ/"

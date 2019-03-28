@@ -1,0 +1,7 @@
+---
+# handlers file for lynis
+
+- name: yum-clean-all
+  command: yum clean all
+  args:
+    warn: no

@@ -1,0 +1,48 @@
+---
+# tasks file for lynis
+
+- name: ensure the Lynis repo is enabled
+  yum_repository:
+    name: "lynis"
+    description: "{{ lynis_name }}"
+    baseurl: "{{ lynis_baseurl }}"
+    gpgkey: "{{ lynis_gpgkey }}"
+    enabled: True
+    gpgcheck: True
+  notify: yum-clean-all
+  tags:
+    - lynis
+    - repos
+
+- meta: flush_handlers
+
+- name: ensure Lynis is installed
+  yum:
+    name: lynis
+    state: installed
+  tags:
+    - lynis
+    - packages
+
+- name: add raspberry pi exception
+  set_fact:
+    lynis_exceptions: "{{ lynis_exceptions + ['STRG-1840'] }}"
+  when:
+    - ansible_architecture == "armv7l"
+    - ansible_bios_date == "NA"
+    - ansible_bios_version == "NA"
+    - ansible_system_vendor == "NA"
+  tags:
+    - lynis
+    - config
+
+- name: ensure custom profiles exist
+  template:
+    src: custom.prf.j2
+    dest: /etc/lynis/custom.prf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - lynis
+    - config

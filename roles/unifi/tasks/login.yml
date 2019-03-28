@@ -1,0 +1,82 @@
+---
+# tasks file for unifi-login
+
+- name: login to unifi portal
+  uri:
+    url: https://{{ unifi_server }}/api/login
+    method: POST
+    validate_certs: no
+    body:
+      username: "{{ unifi_user }}"
+      password: "{{ unifi_pass }}"
+      remember: false
+      strict: false
+    body_format: json
+  register: unifi_login
+  run_once: yes
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: store unifi session cookies
+  set_fact:
+    unifi_session: "{{ unifi_login.set_cookie }}"
+  delegate_to: localhost
+  run_once: yes
+
+- name: get host meta data
+  uri:
+    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/stat/user/{{ mac_address }}
+    method: GET
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+  register: unifi_meta
+  ignore_errors: yes
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: store unifi meta data for host
+  set_fact:
+    unifi_name: "{{ unifi_meta.json.data.0['name'] | default('') }}"
+    unifi_host_id: "{{ unifi_meta.json.data.0['_id'] | default('') }}"
+    unifi_network: "{{ unifi_meta.json.data.0['network'] | default('') }}"
+    unifi_network_id: "{{ unifi_meta.json.data.0['network_id'] | default('') }}"
+    unifi_ip: "{{ unifi_meta.json.data.0['ip'] | default('') }}"
+    unifi_ip_type: "{% if 'fixed_ip' in unifi_meta.json.data.0 %}fixed{% else %}floating{% endif %}"
+    unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
+  when: "not unifi_meta.failed"
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: get unifi user groups
+  uri:
+    url: https://{{ unifi_server}}/api/s/{{ unifi_site }}/rest/usergroup
+    method: GET
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+  register: unifi_groups_meta
+  ignore_errors: yes
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: parse unifi user groups
+  set_fact:
+      unifi_usergroups: '{{ unifi_usergroups | default({}) | combine({item.name: item._id}) }}'
+  when: "not unifi_groups_meta.failed"
+  delegate_to: localhost
+  run_once: yes
+  loop: "{{ unifi_groups_meta.json.data }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags:
+    - ubnt
+    - unifi

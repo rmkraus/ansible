@@ -1,0 +1,25 @@
+---
+# tasks file for monitoring
+- name: Ensure monitoring tools are installed
+  yum:
+    name:
+      - psacct
+      - sysstat
+    state: installed
+  tags:
+    - monitoring
+    - packages
+
+- name: Ensure monitoring is running
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - psacct
+    - sysstat
+  tags:
+    - monitoring
+    - services
+
+

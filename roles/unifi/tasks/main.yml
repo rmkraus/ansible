@@ -1,0 +1,4 @@
+---
+# tasks file for unifi-login
+
+- include_tasks: "{{ unifi_action }}.yml"

@@ -1,0 +1,7 @@
+---
+# defaults file for hardening
+hardening_pass_max_days: 365
+hardening_pass_min_days: 10
+hardening_pass_min_len: 10
+hardening_allow_usb_drives: no
+hardening_selinux: enabled

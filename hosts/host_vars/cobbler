@@ -1,0 +1,45 @@
+cobbler_server: 'cobbler.lab.rmkra.us'
+cobbler_user: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      61396533323134323861306639383130396639633032346437643832386363373761333964366366
+      3464333737666562633836626637653366326561343266310a643038643563363461633338333433
+      33353161343238343338623234323466303730323466643263353332646162346335323831386162
+      3130656465623832370a346365353930386338326363616433336133623533363534363063366533
+      3236
+cobbler_password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      64306231643330626235336566303334323364353632393663633239643933656634663032396436
+      6266623761666132616636366566616431323138626131330a613939633862373237373639383134
+      32626265333062333864636632383839363065633662393064646434616665666637653431613964
+      3531313430623534310a363939643562333036343730363864366330643234366437653962313335
+      65346535633138323464373838326263326565303239613331623362323333373530
+cobbler_password_salt: "Zle.mqHML3ym8Xdq"
+# cobbler_named_forward_zones: '["lab.rmkra.us", "mgmt.rmkra.us"]'
+# cobbler_named_reverse_zones: '["192.168.4", "192.168.3"]'
+# cobbler_named_allow_transfer: '192.168.4.3;192.168.4.4;'
+# cobbler_dhcp_subnet: "192.168.4.0"
+# cobbler_dhcp_router: "192.168.4.1"
+# cobbler_dhcp_dns: "192.168.4.1"
+# cobbler_dhcp_dyn_range: "192.168.4.6 192.168.4.99"
+cobbler_ssl_cert: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/cert.pem
+cobbler_ssl_key: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/privkey.pem
+cobbler_ssl_chain: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/chain.pem
+disks:
+  - device: /dev/sda
+    partitions:
+      - id: 1
+        name: var_www_cobbler
+        start: 0%
+        end: 50%
+        fstype: xfs
+        mount: /var/www/cobbler
+      - id: 2
+        name: downloads
+        start: 50%
+        end: 100%
+        fstype: xfs
+        mount: /downloads
+lynis_host_exceptions:
+  - FILE-6310  # Cannot easily control partition tables on a pi
+  - FILE-6336  # Cannot easily control partition tables on a pi
+hardening_selinux: disabled

@@ -1,0 +1,3 @@
+lynis_host_exceptions:
+  - FILE-6310  # Cannot easily control partition tables on a pi
+  - FILE-6336  # Cannot easily control partition tables on a pi

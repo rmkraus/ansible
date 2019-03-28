@@ -1,0 +1,22 @@
+---
+# defaults file for lynis
+lynis_global_exceptions: []
+lynis_group_exceptions: []
+lynis_host_exceptions: []
+lynis_os_exceptions:
+  Fedora:
+    25:
+    26:
+    27:
+    28:
+    29:
+    30:
+  RedHat:
+    6:
+    7:
+    8:
+  CentOS:
+    6:
+    7:
+    8:
+

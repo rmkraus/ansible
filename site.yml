@@ -1,0 +1,35 @@
+#!/usr/bin/ansible-playbook
+---
+
+- name: core configuration to all hosts
+  hosts: all
+  become: yes
+  become_user: root
+
+  roles:
+    - ansible-deps
+    - root-user
+    - lynis
+    - ntp
+    - ssh
+    - hardening
+    - monitoring
+
+- name: pxe boot/dhcp server
+  hosts: pxe_server
+  become: yes
+  become_user: root
+
+  roles:
+    - disks
+    - epel
+    - cobbler
+
+- name: production infra nodes
+  hosts: infra
+  become: yes
+  become_user: root
+
+  roles:
+    - bind
+...

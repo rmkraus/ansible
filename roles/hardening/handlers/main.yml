@@ -1,0 +1,4 @@
+---
+# handlers file for hardening
+- name: reboot host
+  reboot:

@@ -1,0 +1,62 @@
+bind_forwarders: '1.1.1.1;1.0.0.1;'
+bind_allow_update: yes
+bind_update_key_algorithm: hmac-sha256
+bind_update_key_secret: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      35366132313133626337396437356530326333333035653365643939303661383332316435623362
+      3061653830333734633534396261353166333530333134300a313631393239326661353965386530
+      34363461623431356566653733386134383139363638626532623466623463323162643536636338
+      6339656339663532330a623362376662326132376336646338636434356562393538633636303338
+      63386463303261356433306430626461366131303164356466336662356136306637
+bind_master: inf-0
+bind_zones:
+  - name: lab.rmkra.us.
+    type: master
+    masters: 192.168.4.3;
+    start:
+      primary_ns_name: inf-0.lab.rmkra.us.
+      admin_ns_name: rmkra.us.
+      nameservers:
+        - inf-0.lab.rmkra.us.
+        - inf-1.lab.rmkra.us.
+      records:
+        - name: cobbler
+          type: A
+          value: 192.168.4.2
+        - name: inf-0
+          type: A
+          value: 192.168.4.3
+        - name: inf-1
+          type: A
+          value: 192.168.4.4
+  - name: mgmt.rmkra.us.
+    type: forward
+    masters: 192.168.4.1;
+  - name: 4.168.192.in-addr.arpa.
+    type: master
+    masters: 192.168.4.3;
+    start:
+      primary_ns_name: inf-0.lab.rmkra.us.
+      admin_ns_name: rmkra.us.
+      nameservers:
+        - inf-0.lab.rmkra.us.
+        - inf-1.lab.rmkra.us.
+      records:
+        - name: 2
+          type: PTR
+          value: cobbler.lab.rmkra.us.
+        - name: 3
+          type: PTR
+          value: inf-0.lab.rmkra.us.
+        - name: 4
+          type: PTR
+          value: inf-1.lab.rmkra.us.
+  - name: 3.168.192.in-addr.arpa.
+    type: forward
+    masters: 192.168.4.1;
+  - name: home.rmkra.us.
+    type: forward
+    masters: 192.168.4.1;
+  - name: 1.168.192.in-addr.arpa.
+    type: forward
+    masters: 192.168.4.1;

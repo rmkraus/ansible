@@ -1,0 +1,214 @@
+---
+# tasks file for cobbler
+- name: ensure cobbler artifacts directory exists
+  file:
+    dest: "{{ ansible_deps_artifacts }}/cobbler"
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+  tags:
+    - cobbler
+    - filesystem
+
+- name: ensure cobbler and friends are installed
+  yum:
+    name:
+      - python2-django-1.6.11.7
+      - cobbler
+      - cobbler-web
+      - bind
+      - dhcp
+      - httpd
+      - mod_ssl
+      - pykickstart
+      - ipmitool
+      - fence-agents
+    state: installed
+  notify: update cobbler
+  tags:
+    - cobbler
+    - packages
+
+- name: ensure syslinux is installed
+  get_url:
+    url: 'ftp://ftp.pbone.net/mirror/archive.fedoraproject.org/fedora/linux/releases/20/Everything/x86_64/os/Packages/s/syslinux-4.05-7.fc20.x86_64.rpm'
+    dest: '{{ ansible_deps_artifacts }}/cobbler/syslinux.x86_64.rpm'
+  tags:
+    - cobbler
+    - packages
+
+- name: ensure cobbler has been configured
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/cobbler/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - settings
+    - modules.conf
+    - dhcp.template
+    - named.template
+  notify: restart cobblerd
+  tags:
+    - cobbler
+    - config
+
+- name: ensure the firewall allows cobbler traffic
+  firewalld:
+    port: "{{ item }}"
+    immediate: yes
+    permanent: yes
+    state: enabled
+  with_items:
+    - 53/tcp
+    - 53/udp
+    - 67/udp
+    - 69/udp
+    - 80/tcp
+    - 443/tcp
+    - 25150/tcp
+    - 25151/tcp
+  tags:
+    - cobbler
+    - firewall
+
+- name: ensure apache allows overrides
+  blockinfile:
+    path: /etc/httpd/conf/httpd.conf
+    block: |
+      <Directory "/var/www/html">
+        AllowOverride All
+      </Directory>
+  notify: restart httpd
+  tags:
+    - cobbler
+    - httpd
+    - config
+
+- name: ensure apache root redirects to cobbler web ui
+  lineinfile:
+    line: "Redirect 301 / /cobbler_web"
+    path: "/var/www/html/.htaccess"
+    owner: root
+    group: root
+    mode: '0644'
+    create: yes
+  tags:
+    - cobbler
+    - httpd
+    - config
+
+- name: ensure ssl certs are installed
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0600'
+  with_items:
+    - src: "{{ cobbler_ssl_cert }}"
+      dest: "/etc/pki/tls/certs/cobbler.crt"
+    - src: "{{ cobbler_ssl_key }}"
+      dest: "/etc/pki/tls/private/cobbler.key"
+    - src: "{{ cobbler_ssl_chain }}"
+      dest: "/etc/pki/tls/certs/cobbler.chain"
+  notify: restart httpd
+  tags:
+    - cobbler
+    - config
+    - ssl
+    - httpd
+
+- name: ensure ssl certs are configured
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - line: "SSLCertificateFile /etc/pki/tls/certs/cobbler.crt"
+      regexp: "^SSLCertificateFile"
+    - line: "SSLCertificateKeyFile /etc/pki/tls/private/cobbler.key"
+      regexp: "^SSLCertificateKeyFile"
+    - line: "SSLCertificateChainFile /etc/pki/tls/certs/cobbler.chain"
+      regexp: "^[#]*SSLCertificateChainFile"
+  notify: restart httpd
+  tags:
+    - cobbler
+    - config
+    - httpd
+    - ssl
+
+- name: ensure cobbler, apache, and tftp  are running/enabled
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - cobblerd
+    - httpd
+    - tftp.socket
+  tags:
+    - cobbler
+    - services
+
+- name: ensure dhcpd service is in the correct state
+  service:
+    name: "dhcpd"
+    state: "{% if cobbler_manage_dhcp %}started{% else %}stopped{% endif %}"
+    enabled: "{{ cobbler_manage_dhcp }}"
+  tags:
+    - cobbler
+    - services
+
+- name: ensure dummy image is loaded
+  copy:
+    src: dummy.iso
+    dest: "{{ ansible_deps_artifacts }}/cobbler/dummy.iso"
+  notify: install dummy iso
+  tags:
+    - cobbler
+    - config
+
+- meta: flush_handlers
+
+- name: ensure ansible/cobbler service account exists
+  user:
+    name: "{{ cobbler_user }}"
+    password: "{{ cobbler_password | password_hash('sha512', cobbler_password_salt) }}"
+    state: present
+  tags:
+    - cobbler
+    - config
+
+- name: ensure cobbler server is self managing
+  cobbler_system:
+    host: "{{ cobbler_server }}"
+    username: "{{ cobbler_user }}"
+    password: "{{ cobbler_password }}"
+    name: "{{ ansible_fqdn }}"
+    use_ssl: yes
+    properties:
+      netboot_enabled: no
+      status: production
+      hostname: "{{ ansible_fqdn }}"
+      image: dummy
+    interfaces: {"primary": {"macaddress": "{{ ansible_default_ipv4['macaddress'] }}", "ipaddress": "{{ ansible_default_ipv4['address'] }}", "dnsname": "{{ ansible_fqdn }}", "dhcptag": "default"}}
+  delegate_to: localhost
+  notify: cobbler sync
+  tags:
+    - cobbler
+    - config
+
+- meta: flush_handlers
+
+- name: ensure named service is in the correct state
+  service:
+    name: "named"
+    state: "{% if cobbler_manage_dns %}started{% else %}stopped{% endif %}"
+    enabled: "{{ cobbler_manage_dns }}"
+  tags:
+    - cobbler
+    - services
+

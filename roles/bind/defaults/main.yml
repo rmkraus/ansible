@@ -1,0 +1,10 @@
+---
+# defaults file for bind
+bind_forwarders: '8.8.8.8;8.8.4.4;'
+bind_slave_zones: []
+bind_forward_zones: []
+bind_allow_update: no
+bind_update_key_algorithm: hmac-md5
+bind_update_key_secret: ''
+bind_zones: []
+bind_master: ''

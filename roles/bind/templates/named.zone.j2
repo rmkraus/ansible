@@ -1,0 +1,14 @@
+$TTL 300
+@           IN      SOA     {{ item.item.start.primary_ns_name }}   {{ item.item.start.admin_ns_name }} (
+                            1       ;   Serial
+                            600     ;   Refresh
+                            1800    ;   Retry
+                            604800  ;   Expire
+                            300     ;   TTL
+                            )
+{% for ns in item.item.start.nameservers %}
+            IN      NS      {{ ns }}
+{% endfor %}
+{% for record in item.item.start.records %}
+{{ record.name }} IN {{ record.type }} {{ record.value }}
+{% endfor %}

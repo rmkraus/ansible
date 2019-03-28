@@ -1,0 +1,55 @@
+{% if bind_allow_update %}
+key update-key {
+    algorithm {{ bind_update_key_algorithm }};
+    secret "{{ bind_update_key_secret }}";
+};
+
+{% endif %}
+options {
+    listen-on           port 53 { any; };
+    directory           "/var/named";
+    dump-file           "/var/named/data/cache_dump.db";
+    statistics-file     "/var/named/data/named_stats.txt";
+    memstatistics-file  "/var/named/data/named_mem_stats.txt";
+    allow-query         { any; };
+    recursion           yes;
+
+    forwarders { {{ bind_forwarders }} };
+{% if bind_allow_update %}
+{% if bind_master == inventory_hostname %}
+    allow-update { key update-key; };
+{% else %}
+    allow-update-forwarding { key update-key; };
+{% endif %}
+{% endif %}
+};
+
+logging {
+    channel default_debug {
+        file        "data/named.run";
+        severity    dynamic;
+    };
+};
+
+{% for zone in bind_zones %}
+{% if zone.type == 'slave' or ( zone.type == 'master' and bind_master != inventory_hostname ) %}
+zone "{{ zone.name }}" {
+    type slave;
+    masters { {{ zone.masters }} };
+    file "{{ zone.name }}";
+};
+{% endif %}
+{% if zone.type == 'master' and bind_master == inventory_hostname %}
+zone "{{ zone.name }}" {
+    type master;
+    file "{{ zone.name }}";
+};
+{% endif %}
+{% if zone.type == 'forward' %}
+zone "{{ zone.name }}" {
+    type forward;
+    forward only;
+    forwarders { {{ zone.masters }} };
+};
+{% endif %}
+{% endfor %}

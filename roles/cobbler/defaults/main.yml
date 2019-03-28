@@ -1,0 +1,19 @@
+---
+# defaults file for cobbler
+cobbler_server: localhost
+cobbler_user: localuser
+cobbler_password: localpassword
+cobbler_password_salt: '8321Dk3hv.eo83.9'
+cobbler_manage_dns: no
+cobbler_manage_dhcp: no
+cobbler_named_forward_zones: '["localdomain"]'
+cobbler_named_reverse_zones: '["192.168.1"]'
+cobbler_named_allow_transfer: 'any;'
+cobbler_dhcp_subnet: 192.168.1.0
+cobbler_dhcp_mask: 255.255.255.0
+cobbler_dhcp_router: 192.168.1.1
+cobbler_dhcp_dns: 192.168.1.1
+cobbler_dhcp_dyn_range: "192.168.1.10 192.168.1.50"
+cobbler_ssl_cert: no_default_value
+cobbler_ssl_key: no_default_value
+cobbler_ssl_chain: no_default_value

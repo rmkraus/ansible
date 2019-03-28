@@ -1,0 +1,111 @@
+---
+## general network infrastructure services
+domain_services:
+  cobbler:
+    server: 'cobbler.lab.rmkra.us'
+    user: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      61396533323134323861306639383130396639633032346437643832386363373761333964366366
+      3464333737666562633836626637653366326561343266310a643038643563363461633338333433
+      33353161343238343338623234323466303730323466643263353332646162346335323831386162
+      3130656465623832370a346365353930386338326363616433336133623533363534363063366533
+      3236
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      64306231643330626235336566303334323364353632393663633239643933656634663032396436
+      6266623761666132616636366566616431323138626131330a613939633862373237373639383134
+      32626265333062333864636632383839363065633662393064646434616665666637653431613964
+      3531313430623534310a363939643562333036343730363864366330643234366437653962313335
+      65346535633138323464373838326263326565303239613331623362323333373530
+  unifi:
+    server: ubnt.home.rmkra.us:8443
+    user: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      39663461386466303736386530343063633963383632666632323138303038373131636136633731
+      3530353935643766336163663833613338623735666464300a323235643663626330303336323730
+      36303030653830326236653165393666393761623865316636633066346165303665656564376334
+      6138393163653665330a393166326665343933353735613164303537346535316162656438633635
+      3730
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      65613163376338383837326532376361613666653562633265623234306334663264643038653739
+      3038313063633931303938303730393263623638373939380a393130666136313465396463653538
+      64386235656463333237646231303232363431306633353639323866623232646437653734353630
+      3364353863346633340a656239363832333065376363336430353539346334376262383764643032
+      3165
+  dns:
+    server: inf-0.lab.rmkra.us
+    secret: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      35366132313133626337396437356530326333333035653365643939303661383332316435623362
+      3061653830333734633534396261353166333530333134300a313631393239326661353965386530
+      34363461623431356566653733386134383139363638626532623466623463323162643536636338
+      6339656339663532330a623362376662326132376336646338636434356562393538633636303338
+      63386463303261356433306430626461366131303164356466336662356136306637
+    algorithm: hmac-sha256
+    key_name: update-key
+usergroup: 'Lab'
+dns_records_primary_forward_zone: 'lab.rmkra.us'
+dns_records_primary_reverse_zone: '4.168.196.in-addr.arpa'
+
+## Lynis Security Scanning configuration
+lynis_global_exceptions:
+  - BOOT-5122  # Home lab, GRUB passwords probably aren't necessary
+  - FINT-4350  # I don't think I need to run AIDE at home
+  - FIRE-4513  # Default firewall rules are fine, ansible gets the rest
+  - HRDN-7222  # Compilers are managed by rpms and used for installs
+  - HRDN-7230  # I don't want to manage malware scanners at the moment
+  - NAME-4404  # The default /etc/hosts file is fine
+  - NETW-2705  # Home network, 1 DNS server is fine
+  - NETW-3032  # Home network, I don't really want arpwatch logging
+  - SSH-7408:loglevel  # Verbose logging is a bit much
+  - SSH-7408:port  # Let's keep SSH on port 22
+  - STRG-1846  # I'm not familiar with disabling firmware storage
+lynis_os_exceptions:
+  Fedora:
+    '29': []
+  RedHat:
+    '6':
+      - AUTH-9308  # Home lab, I don't want a single user password
+      - SSH-7408:useprivilegeseparation  # sandbox is not an option here
+    '7': []
+  CentOS:
+    '6':
+      - AUTH-9308  # Home lab, I don't want a single user password
+      - SSH-7408:useprivilegeseparation  # sandbox is not an option here
+    '7': []
+
+## General System Configuration
+ntp_servers:
+  - gateway.
+root_user_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  64356331643433613565643534393538323364353839396462613635663131646238333466393164
+  6633336363343139393262313336333364396262633038610a373263623738333332353364376638
+  37323232666135383361383538333030633033343531306531376234303261653337653936646163
+  6236656262393839350a633566663939313736323434633363366137303734306530646439643063
+  61316230386636336338316564313534383061323530643262326262393034646333653930653636
+  61373464353965356161633661303861323165666530353765323564313539373266373465393565
+  61313638323961623366333366343138323730663035623935316161393961643963646137613031
+  63353862613337396436356436363135653435633139653764323935326132393834663737383332
+  61363363313339376637313337663131646535353935306331323863663366356265
+root_user_ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyEmE9RgpVOEfrTih/aw7eF9r44YPYIJgqkFOkREDxSzh9T580vee5LI5NdgD8+dIFPVHjzeOGYqHudQjwPDuPNCqaYZg3+AT1+4uHeiAyQ4OvS5dLeHU4K9fX8FBCnFOpxde6rBlSnEF3+ZuMdiQAVmNPD50XmYnbohUHh+3vVam9stNAN6iZw1OWz7Q5JxDYayjyk1htAH20f0OaKR0e9xCDS4B1e+qJjUN7ZSVyAV95ojzP5NPkk0ImQhvH+rnRepPp3LYrst9CYIboH0sVU++y0zubO0wWZ5XXRmlF7qmm6Q+MKGVwO8AjCY+kRCpWB+hEkKnG85pyPsh8myHt root@lab.rmkra.us
+ssh_banner: |
+    ********************************************************************
+    *                  _                                               *
+    *                 | |                                              *
+    * _ __  _ __ ___  | | __ _ __  __ _    _   _  ___                  *
+    *| '__|| '_ ` _ \ | |/ /| '__|/ _` |  | | | |/ __|                 *
+    *| |   | | | | | ||   < | |  | (_| |  | |_| |\__ \                 *
+    *|_|   |_| |_| |_||_|\_\|_|   \__,_|(*)\__,_||___/******************
+    *                                                                  *
+    * This system is for the use of authorized users only.  Usage of   *
+    * this system may be monitored and recorded by system personnel.   *
+    *                                                                  *
+    * Anyone using this system expressly consents to such monitoring   *
+    * and is advised that if such monitoring reveals possible          *
+    * evidence of criminal activity, system personnel may provide the  *
+    * evidence from such monitoring to law enforcement officials.      *
+    *                                                                  *
+    ********************************************************************

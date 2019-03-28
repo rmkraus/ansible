@@ -1,0 +1,29 @@
+---
+- name: set static ip
+  uri:
+    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/rest/user/{{ unifi_host_id }}
+    method: PUT
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+    body:
+      fixed_ip: "{{ unifi_ip }}"
+      network_id: "{{ unifi_network_id }}"
+      use_fixedip: true
+    body_format: json
+  when: "unifi_ip_type == 'floating'"
+  register: unifi_action
+  changed_when: unifi_action.status == 200
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+
+- name: update unifi meta data
+  set_fact:
+    unifi_ip_type: static
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi
+

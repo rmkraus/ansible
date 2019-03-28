@@ -1,0 +1,49 @@
+#!/usr/bin/ansible-playbook
+# Credit: https://gryzli.info/2017/12/21/ansible-debug-print-variables/
+---
+- name: list all facts
+  hosts: all
+  become_user: root
+
+  vars:
+    module_msg: |
+        {{ vars | to_nice_json }}
+    environment_msg: |
+        {{ environment | to_nice_json }}
+    group_names_msg: |
+        {{ group_names | to_nice_json }}
+    groups_msg: |
+        {{ groups | to_nice_json }}
+    host_msg: |
+        {{ hostvars | to_nice_json }}
+
+  tasks:
+    - name: Module Variables
+      debug:
+        msg: "{{ module_msg.split('\n') }}"
+      tags: module
+
+    - name: Environment Variables
+      debug:
+        msg: "{{ environment_msg.split('\n') }}"
+      tags: environment
+
+    - name: GROUP NAMES Variables
+      debug:
+        msg: "{{ group_names_msg.split('\n') }}"
+      tags: group_names
+
+    - name: GROUPS Variables
+      debug:
+        msg: "{{ groups_msg.split('\n') }}"
+      tags: groups
+
+    - name: HOST Variables
+      debug:
+        msg: "{{ host_msg.split('\n') }}"
+      tags: hostvars
+
+    - name: custom var
+      debug:
+        msg: "{{ domain_services.cobbler.password }}"
+      tags: custom
