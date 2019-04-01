@@ -54,23 +54,6 @@
         mode: 0640
       listen: import p12
 
-    - name: recompile public key
-      shell:
-        cat {{ cert_dir }}/cert.pem \
-            {{ cert_dir }}/fullchain.pem > {{ cert_dir }}/cloudkey.crt
-
-    - name: verify public key perms
-      file:
-        name: "{{ cert_dir }}/cloudkey.crt"
-        owner: root
-        group: root
-        mode: 0640
-      listen: recompile public key
-
-    - name: import new keys to unifi
-      command: |
-          java -jar /usr/lib/unifi/lib/ace.jar import_key_cert {{cert_dir}}/cloudkey.key {{cert_dir}}/cloudkey.crt
-
     - name: restart nginx
       service:
         name: nginx
@@ -128,7 +111,7 @@
         regexp: "{{ item.regexp }}"
         dest: /etc/nginx/sites-enabled/cloudkey-webui
       loop:
-        - line: "        ssl_certificate {{ cert_dir }}/cloudkey.crt;"
+        - line: "        ssl_certificate {{ cert_dir }}/fullchain.pem;"
           regexp: "^        ssl_certificate "
           label: "ssl_certificate"
         - line: "        ssl_certificate_key {{ cert_dir }}/privkey.pem;"
@@ -147,7 +130,6 @@
         mode: 0640
       notify:
           - update keystore
-          - recompile public key
           - restart unifi
           - restart nginx
       loop:
