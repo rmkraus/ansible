@@ -176,7 +176,7 @@
 - name: ensure ansible/cobbler service account exists
   user:
     name: "{{ cobbler_user }}"
-    password: "{{ cobbler_password | password_hash('sha512', cobbler_password_salt) }}"
+    password: "{{ cobbler_password_crypt }}"
     state: present
   tags:
     - cobbler

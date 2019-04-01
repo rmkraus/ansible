@@ -3,7 +3,7 @@
 cobbler_server: localhost
 cobbler_user: localuser
 cobbler_password: localpassword
-cobbler_password_salt: '8321Dk3hv.eo83.9'
+cobbler_password_crypt: '$6$vG509ywjt9R3mVfc$TjoTHEFLMFIyxchPjlucvEz74uC.fHQ6E1yqA0tjRn.y1.N8rSsi3FtnOgoVQZtShcaK0z2YBfBnVlDV56kXS0'
 cobbler_manage_dns: no
 cobbler_manage_dhcp: no
 cobbler_named_forward_zones: '["localdomain"]'
