@@ -43,6 +43,7 @@
 
     - role: pxe_boot
       pxe_boot_netboot: yes
+      pxe_boot_action: update
       tags:
         - pxe
 

@@ -1,3 +1,4 @@
 ---
 # defaults file for pxe_boot
 pxe_boot_netboot: no
+pxe_boot_action: update
