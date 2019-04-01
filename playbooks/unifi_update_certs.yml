@@ -1,0 +1,179 @@
+#!/usr/bin/ansible-playbook
+#
+# unifi_update_certs.yml
+#
+# This playbook will deploy certificates created by most Let's Encrypt clients
+# to a UniFi CloudKey. These certificates will be deployed in a way that will
+# not be lost when the CloudKey reboots.
+#
+# To use this playbook, your inventory must have a group or host called
+# "cloud_key". Any host that will be addressed by this name, must have a
+# variable called "ssl_keystore" defined. This variable should be the path to
+# the local directory in which your Let's Encrypt client has stored the
+# certificates and keys. It is also recomended to have SSH keys setup that
+# allow the Ansible host to SSH into the CloudKey without a password.
+#
+# By default, the SSL Certificates will be store in "/root/ssl_certs" on the
+# CloudKey's local storage. To change this, update the "cert_dir" variable that
+# is defined in the playbook.
+---
+
+- name: update cloud key ssl cert
+  hosts: cloud_key
+  become: no
+
+  vars:
+    cert_dir: /root/ssl_certs  # remote directory where certs will be kept
+    ansible_ssh_user: ubnt
+
+  handlers:
+    - name: create pkcs keystore
+      command: |
+          openssl pkcs12 -export -inkey "{{ cert_dir }}/privkey.pem" \
+            -in "{{ cert_dir }}/fullchain.pem" \
+            -out "{{ cert_dir }}/cert.p12" \
+            -name unifi -password pass:temppass
+      listen: update keystore
+
+    - name: import keystore
+      command: |
+         keytool -importkeystore -noprompt -alias unifi \
+            -deststorepass aircontrolenterprise \
+            -destkeypass aircontrolenterprise \
+            -destkeystore /usr/lib/unifi/data/keystore \
+            -srckeystore {{ cert_dir }}/cert.p12 \
+            -srcstoretype PKCS12 \
+            -srcstorepass temppass
+      listen: update keystore
+
+    - name: verify keystore perms
+      file:
+        name: /usr/lib/unifi/data/keystore
+        owner: root
+        group: root
+        mode: 0640
+      listen: import p12
+
+    - name: recompile public key
+      shell:
+        cat {{ cert_dir }}/cert.pem \
+            {{ cert_dir }}/fullchain.pem > {{ cert_dir }}/cloudkey.crt
+
+    - name: verify public key perms
+      file:
+        name: "{{ cert_dir }}/cloudkey.crt"
+        owner: root
+        group: root
+        mode: 0640
+      listen: recompile public key
+
+    - name: import new keys to unifi
+      command: |
+          java -jar /usr/lib/unifi/lib/ace.jar import_key_cert {{cert_dir}}/cloudkey.key {{cert_dir}}/cloudkey.crt
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: restart unifi
+      service:
+        name: unifi
+        state: restarted
+
+  tasks:
+    - name: get status of current unifi keystore
+      stat:
+        path: /usr/lib/unifi/data/keystore
+      register: keystore_status
+
+    - name: ensure keystore exists
+      debug:
+        msg: keystore is missing
+      when:
+        - not keystore_status.stat.exists
+      changed_when: True
+      notify:
+        - update keystore
+        - restart unifi
+
+    - name: ensure current unifi keystore is not a link
+      file:
+        path: /usr/lib/unifi/data/keystore
+        state: absent
+      when:
+        - keystore_status.stat.exists
+        - keystore_status.stat.islnk
+      notify:
+        - update keystore
+        - restart unifi
+
+    - name: ensure unifi will not overwrite keystore on restart
+      lineinfile:
+        regexp: "^UNIFI_SSL_KEYSTORE="
+        state: absent
+        dest: /etc/default/unifi
+
+    - name: ensure cert directory exists
+      file:
+        path: "{{ cert_dir }}"
+        owner: root
+        group: root
+        mode: 0700
+        state: directory
+
+    - name: ensure nginx loads keys and certs from new location
+      lineinfile:
+        line: "{{ item.line }}"
+        regexp: "{{ item.regexp }}"
+        dest: /etc/nginx/sites-enabled/cloudkey-webui
+      loop:
+        - line: "        ssl_certificate {{ cert_dir }}/cloudkey.crt;"
+          regexp: "^        ssl_certificate "
+          label: "ssl_certificate"
+        - line: "        ssl_certificate_key {{ cert_dir }}/privkey.pem;"
+          regexp: "^        ssl_certificate_key "
+          label: "ssl_certificate_key"
+      loop_control:
+        label: "{{ item.label }}"
+      notify: restart nginx
+
+    - name: copy ssl keys and certs to cloud key
+      copy:
+        src: "{{ ssl_keystore}}/{{ item.src }}"
+        dest: "{{ cert_dir }}/{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0640
+      notify:
+          - update keystore
+          - recompile public key
+          - restart unifi
+          - restart nginx
+      loop:
+        - src: privkey.pem
+          dest: privkey.pem
+        - src: cert.pem
+          dest: cert.pem
+        - src: fullchain.pem
+          dest: fullchain.pem
+        - src: chain.pem
+          dest: chain.pem
+      loop_control:
+        label: "{{ item.dest }}"
+
+    - meta: flush_handlers
+
+    - name: verify keystore perms
+      file:
+        name: /usr/lib/unifi/data/keystore
+        owner: root
+        group: root
+        mode: 0640
+
+    - name: verify public key perms
+      file:
+        name: "{{ cert_dir }}/cloudkey.crt"
+        owner: root
+        group: root
+        mode: 0640
