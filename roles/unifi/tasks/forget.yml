@@ -1,15 +1,16 @@
 ---
-- name: set unifi user group
+- name: set static ip
   uri:
-    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/rest/user/{{ unifi_host_id }}
-    method: PUT
+    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/cmd/stamgr
+    method: POST
     validate_certs: no
     headers:
       Cookie: "{{ unifi_session }}"
     body:
-      usergroup_id: '{{ unifi_usergroups[usergroup] }}'
+      cmd: "forget-sta"
+      macs:
+        - "{{ mac_address }}"
     body_format: json
-  when: "unifi_usergroup_id != unifi_usergroups[usergroup]"
   register: unifi_action
   changed_when: unifi_action.status == 200
   delegate_to: localhost
@@ -19,7 +20,10 @@
 
 - name: update unifi meta data
   set_fact:
-    unifi_usergroup_id: '{{ unifi_usergroups[usergroup] }}'
+    unifi_ip: ""
+    unifi_host_id: ""
+    unifi_network_id: ""
+    unifi_ip_type: ""
   delegate_to: localhost
   tags:
     - ubnt

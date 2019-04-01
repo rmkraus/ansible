@@ -8,7 +8,7 @@
     key_secret: "{{ domain_services.dns.secret }}"
     key_name: '{{ domain_services.dns.key_name }}'
     zone: '{{ item.zone }}'
-    state: '{{ item.state | default("present") }}'
+    state: '{% if dns_records_state == "present" %}{{ item.state | default("present") }}{% else %}{{ dns_records_state }}{% endif %}'
   delegate_to: localhost
   loop: '{{ dns_records_custom_records }}'
   loop_control:

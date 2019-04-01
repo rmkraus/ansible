@@ -10,7 +10,7 @@
     key_secret: "{{ domain_services.dns.secret }}"
     key_name: '{{ domain_services.dns.key_name }}'
     zone: '{{ dns_records_primary_forward_zone }}'
-    state: present
+    state: "{{ dns_records_state }}"
   delegate_to: localhost
   when:
     - unifi_ip is not undefined
@@ -38,7 +38,7 @@
     key_secret: "{{ domain_services.dns.secret }}"
     key_name: '{{ domain_services.dns.key_name }}'
     zone: '{{ dns_records_primary_reverse_zone }}'
-    state: present
+    state: "{{ dns_records_state }}"
   delegate_to: localhost
   when:
     - unifi_ip is not undefined
