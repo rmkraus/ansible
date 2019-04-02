@@ -1,0 +1,12 @@
+---
+# tasks file for filesystem
+- name: ensure custom filesystem hierarchy exists
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: "{{ item.state | default('directory') }}"
+  loop: "{{ filesystem }}"
+  tags:
+    - filesystem

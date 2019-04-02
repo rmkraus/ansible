@@ -1,12 +1,28 @@
 #!/usr/bin/ansible-playbook
 ---
 
+- name: get host information from switch
+  hosts: all:!macs
+
+  roles:
+    - role: unifi
+      unifi_action: login
+      unifi_server: "{{ domain_services.unifi.server }}"
+      unifi_user: "{{ domain_services.unifi.user }}"
+      unifi_pass: "{{ domain_services.unifi.password }}"
+    - role: unifi
+      unifi_action: logout
+      unifi_server: "{{ domain_services.unifi.server }}"
+      tags:
+        - dhcp
+
 - name: core configuration to all hosts
-  hosts: all
+  hosts: all:!macs
   become: yes
   become_user: root
 
   roles:
+    - dns_records
     - ansible-deps
     - root-user
     - lynis
@@ -14,6 +30,7 @@
     - ssh
     - hardening
     - monitoring
+    - filesystem
 
 - name: pxe boot/dhcp server
   hosts: pxe_server
@@ -32,4 +49,12 @@
 
   roles:
     - bind
+
+- name: static docker hosts
+  hosts: docker
+  become: yes
+  become_user: root
+
+  roles:
+    - docker
 ...

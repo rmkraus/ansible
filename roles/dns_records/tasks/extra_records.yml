@@ -3,7 +3,7 @@
     server: "{{ domain_services.dns.server }}"
     record: "{{ item.name }}"
     type: "{{ item.type | default('A') }}"
-    value: "{{ item.value }}"
+    value: "{{ item.value | default(unifi_ip) }}"
     key_algorithm: "{{ domain_services.dns.algorithm }}"
     key_secret: "{{ domain_services.dns.secret }}"
     key_name: '{{ domain_services.dns.key_name }}'
@@ -13,6 +13,8 @@
   loop: '{{ dns_records_custom_records }}'
   loop_control:
     label: "{{ item.name }}"
+  when:
+    - unifi_ip is not undefined
   tags:
     - dns_records
     - dns

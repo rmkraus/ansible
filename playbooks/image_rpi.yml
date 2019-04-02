@@ -1,0 +1,20 @@
+#!/usr/bin/ansible-playbook --ask-sudo-pass
+---
+- name: Create an rpi disk
+  hosts: mac-host
+  become: yes
+
+  vars:
+    image_src: /Users/ryankraus/images/CentOS-Userland-7-armv7hl-RaspberryPI-Minimal-1810-sda.raw
+
+  tasks:
+    - name: unmount the sd card
+      command: diskutil umount /dev/disk2s1
+      ignore_errors: yes
+
+    - name: image sd card
+      command: dd if={{ image_src }} of=/dev/disk2
+
+    - name: unmount the sd card
+      command: diskutil umount /dev/disk2s1
+      ignore_errors: yes

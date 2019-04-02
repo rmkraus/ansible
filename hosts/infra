@@ -2,11 +2,14 @@
 cobbler ansible_host=192.168.4.2
 
 [infra]
-inf-0   ansible_host=192.168.4.3 mac_address=b8:27:eb:d7:51:49
-inf-1   ansible_host=192.168.4.4 mac_address=b8:27:eb:dd:60:e6
+inf-0   ansible_host=192.168.4.3 mac_address=b8:27:eb:d7:51:49 pxe_profile=rhel-7-x86_64
+inf-1   ansible_host=192.168.4.4 mac_address=b8:27:eb:dd:60:e6 pxe_profile=rhel-7-x86_64
 
 [hosts]
 # host-0
 host-1  ansible_host=host-1.lab.rmkra.us mac_address=ac:1f:6b:6c:5b:a4 pxe_profile=rhel-7-x86_64
 host-2  ansible_host=host-2.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhel-7-x86_64
 host-3  ansible_host=host-3.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhel-7-x86_64
+
+[macs]
+mac-host ansible_host=192.168.1.64

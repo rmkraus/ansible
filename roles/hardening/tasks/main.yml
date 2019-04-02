@@ -12,6 +12,17 @@
     - config
     - selinux
 
+- name: ensure custom sebools are configured
+  seboolean:
+    name: "{{ item.name }}"
+    state: "{{ item.value }}"
+    persistent: yes
+  loop: "{{ hardening_sebooleans }}"
+  tags:
+    - hardening
+    - config
+    - selinux
+
 - name: Ensure password aging is configured
   lineinfile:
     line: "{{ item.line }}"
