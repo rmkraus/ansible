@@ -2,7 +2,7 @@
 ---
 
 - name: get host information from switch
-  hosts: all:!macs
+  hosts: all:!macs:!networking
 
   roles:
     - role: unifi
@@ -17,7 +17,7 @@
         - dhcp
 
 - name: core configuration to all hosts
-  hosts: all:!macs
+  hosts: all:!macs:!networking
   become: yes
   become_user: root
 
