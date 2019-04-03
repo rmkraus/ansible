@@ -10,10 +10,17 @@
       unifi_server: "{{ domain_services.unifi.server }}"
       unifi_user: "{{ domain_services.unifi.user }}"
       unifi_pass: "{{ domain_services.unifi.password }}"
+      tags:
+        - dns_records
+        - dns
+        - dhcp
+
     - role: unifi
       unifi_action: logout
       unifi_server: "{{ domain_services.unifi.server }}"
       tags:
+        - dns_records
+        - dns
         - dhcp
 
 - name: core configuration to all hosts
@@ -31,6 +38,7 @@
     - hardening
     - monitoring
     - filesystem
+    - postfix
 
 - name: pxe boot/dhcp server
   hosts: pxe_server
@@ -49,6 +57,7 @@
 
   roles:
     - bind
+    - vip
 
 - name: static docker hosts
   hosts: docker

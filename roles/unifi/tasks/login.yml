@@ -45,7 +45,7 @@
     unifi_host_id: "{{ unifi_meta.json.data.0['_id'] | default('') }}"
     unifi_network: "{{ unifi_meta.json.data.0['network'] | default('') }}"
     unifi_network_id: "{{ unifi_meta.json.data.0['network_id'] | default('') }}"
-    unifi_ip: "{{ unifi_meta.json.data.0['ip'] | default('') }}"
+    unifi_ip: "{{ unifi_meta.json.data.0['fixed_ip'] | default(unifi_meta.json.data.0['ip'] | default('')) }}"
     unifi_ip_type: "{% if 'fixed_ip' in unifi_meta.json.data.0 %}fixed{% else %}floating{% endif %}"
     unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
   when: "not unifi_meta.failed"

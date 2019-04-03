@@ -1,2 +1,9 @@
 - include_tasks: primary_records.yml
+  tags:
+    - dns_records
+    - dns
+
 - include_tasks: extra_records.yml
+  tags:
+    - dns_records
+    - dns
