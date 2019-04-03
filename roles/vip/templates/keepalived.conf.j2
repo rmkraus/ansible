@@ -1,0 +1,18 @@
+{% for config in vip_configs %}
+vrrp_instance vip_{{ loop.index }} {
+  interface {{ config.interface }} # interface to monitor
+  {% if inventory_hostname == config.master %}state MASTER{% else %}state BACKUP{% endif %}
+
+  virtual_router_id {{ vip_router_id_prefix }}{{ loop.index }}
+  {% if inventory_hostname == config.master %}priority 101{% else %}priority {{ 100 - loop.index }}{% endif %}
+
+  authentication {
+    auth_type PASS
+    auth_pass {{ config.password }}
+  }
+  virtual_ipaddress {
+    {% for vip in config.vips %}{{ vip }}
+{% endfor %}
+  }
+}
+{% endfor %}

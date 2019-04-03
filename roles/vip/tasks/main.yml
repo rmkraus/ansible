@@ -1,0 +1,45 @@
+---
+# tasks file for vip
+- name: ensure keepalived is installed
+  yum:
+    name: keepalived
+    state: installed
+  tags:
+    - vip
+    - keepalived
+    - packages
+
+- name: ensure keepalived is configured
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart keepalived
+  tags:
+    - vip
+    - keepalived
+    - config
+
+- name: ensure firewall allows vrrp traffic
+  firewalld:
+    rich_rule: 'rule protocol value="vrrp" accept'
+    permanent: yes
+    state: enabled
+    immediate: yes
+  notify: restart keepalived
+  tags:
+    - vip
+    - keepalived
+    - firewall
+
+- name: ensure keepalived is running/enabled
+  service:
+    name: keepalived
+    state: started
+    enabled: yes
+  tags:
+    - vip
+    - keepalived
+    - service
