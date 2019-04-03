@@ -1,0 +1,54 @@
+---
+# tasks file for postfix
+- name: ensure postfix is installed
+  yum:
+    name: postfix
+    state: installed
+  tags:
+    - postfix
+    - packages
+
+- name: ensure sasl auth libraries are installed
+  yum:
+    name: cyrus-sasl,cyrus-sasl-plain,cyrus-sasl-md5
+    state: installed
+  when: postfix_smtp_sasl_auth_enable
+  tags:
+    - postfix
+    - packages
+
+- name: ensure postfix is configured
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart postfix
+  tags:
+    - postfix
+    - config
+
+- name: ensure postfix sasl auth is configured
+  template:
+    src: sasl_passwd.j2
+    dest: /etc/postfix/sasl_passwd
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - restart postfix
+    - build sasl db
+  tags:
+    - postfix
+    - config
+
+- name: ensure postfix is running and enabled
+  service:
+    name: postfix
+    state: started
+    enabled: yes
+  tags:
+    - postfix
+    - service
