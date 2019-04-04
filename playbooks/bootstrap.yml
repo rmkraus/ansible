@@ -12,6 +12,7 @@
       unifi_pass: "{{ domain_services.unifi.password }}"
       tags:
         - dhcp
+        - dns
 
     - role: unifi
       unifi_action: set_static_ip
@@ -36,6 +37,7 @@
       unifi_server: "{{ domain_services.unifi.server }}"
       tags:
         - dhcp
+        - dns
 
     - role: dns_records
       tags:

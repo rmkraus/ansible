@@ -14,7 +14,7 @@ host-3  ansible_host=host-3.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profi
 
 # Mac computers
 [macs]
-mac-host ansible_host=192.168.1.64
+mac-host ansible_host=mac-host.lab.rmkra.us mac_address=00:0e:c6:bc:ff:6e
 
 
 # Networking gear
