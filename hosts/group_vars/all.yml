@@ -78,6 +78,9 @@ lynis_os_exceptions:
 ## General System Configuration
 ntp_servers:
   - gateway.
+postfix_mynetworks: 192.168.0.0/16
+postfix_myorigin: rmkra.us
+postfix_relayhost: "lab.rmkra.us"
 root_user_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61353530343831613562383830366637336262646165306631616637323833336561373131316438

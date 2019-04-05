@@ -58,6 +58,7 @@
     port: 25/tcp
     state: enabled
     permanent: yes
+    immediate: yes
   when:
     - postfix_inet_interfaces != 'localhost'
     - ansible_distribution == 'Fedora' or
