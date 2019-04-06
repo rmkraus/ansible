@@ -1,0 +1,7 @@
+---
+# defaults file for ipa-server
+ipa_server_dm_pass: secret
+ipa_server_admin_pass: secret
+ipa_server_domain: example.com
+ipa_server_realm: EXAMPLE.COM
+ipa_server_install_flags: "--idstart=10000 --mkhomedir"

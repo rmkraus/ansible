@@ -8,4 +8,6 @@
     pool_ids: "{{ rhsm.pools }}"
   when:
     - ansible_distribution == 'RedHat'
+  tags:
+    - rhsm
 

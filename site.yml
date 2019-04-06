@@ -67,4 +67,12 @@
 
   roles:
     - docker
+
+- name: configure Red Hat IdM servers
+  hosts: rhidm
+  become: yes
+  become_user: root
+
+  roles:
+    - ipa-server
 ...

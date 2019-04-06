@@ -1,0 +1,45 @@
+---
+# tasks file for ipa-server
+- name: ensure ipa-server is installed
+  yum:
+    name: ipa-server
+    state: installed
+  tags:
+    - ipa-server
+    - packages
+
+- name: ensure ipa-server is installed
+  command: |
+    ipa-server-install --unattended \
+        -p '{{ ipa_server_dm_pass }}' \
+        -a '{{ ipa_server_admin_pass }}' \
+        -n '{{ ipa_server_domain }}' \
+        -r '{{ ipa_server_realm }}' \
+        {{ ipa_server_install_flags }} \
+        --log-file=/var/local/ansible/ipa-server-install.log
+  args:
+    creates: /var/local/ansible/ipa-server-install.log
+  tags:
+    - ipa-server
+    - config
+
+- name: ensure firewalld ports are open
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  loop:
+    - 80/tcp
+    - 443/tcp
+    - 389/tcp
+    - 636/tcp
+    - 88/tcp
+    - 464/tcp
+    - 53/tcp
+    - 88/udp
+    - 464/udp
+    - 123/udp
+  tags:
+    - ipa-server
+    - firewall

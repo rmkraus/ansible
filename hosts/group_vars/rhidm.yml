@@ -1,0 +1,58 @@
+ipa_server_dm_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32353233313264663032336134333466613334643963363962376637626566323335613464366334
+          3464373966306661326337623565626231393137336431610a613135313535383132636132616464
+          38396432313264643165653939646165613762663962396639346535313434336137643838313661
+          6265323730653839350a366539626661343362363264303234316464386435656238376364623133
+          38666334383238323066316638653765333933353336663062646261613930643830
+ipa_server_admin_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32353233313264663032336134333466613334643963363962376637626566323335613464366334
+          3464373966306661326337623565626231393137336431610a613135313535383132636132616464
+          38396432313264643165653939646165613762663962396639346535313434336137643838313661
+          6265323730653839350a366539626661343362363264303234316464386435656238376364623133
+          38666334383238323066316638653765333933353336663062646261613930643830
+ipa_server_domain: lab.rmkra.us
+ipa_server_realm: LAB.RMKRA.US
+ipa_server_install_flags:
+
+dns_records_custom_records:
+  - name: _kerberos-master._tcp
+    type: SRV
+    value: '0 100 88 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _kerberos-master._udp
+    type: SRV
+    value: '0 100 88 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _kerberos._tcp
+    type: SRV
+    value: '0 100 88 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _kerberos._udp
+    type: SRV
+    value: '0 100 88 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _kerberos
+    type: TXT
+    value: '"LAB.RMKRA.US"'
+    zone: lab.rmkra.us
+  - name: _kpasswd._tcp
+    type: SRV
+    value: '0 100 464 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _kpasswd._udp
+    type: SRV
+    value: '0 100 464 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _ldap._tcp
+    type: SRV
+    value: '0 100 389 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: _ntp.udp
+    type: SRV
+    value: '0 100 123 ipa.lab.rmkra.us.'
+    zone: lab.rmkra.us
+  - name: ipa-ca
+    type: A
+    zone: lab.rmkra.us
