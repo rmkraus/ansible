@@ -1,0 +1,11 @@
+---
+# tasks file for rhsm
+- name: ensure red hat systems are have subscription
+  redhat_subscription:
+    state: present
+    username: "{{ rhsm.username }}"
+    password: "{{ rhsm.password }}"
+    pool_ids: "{{ rhsm.pools }}"
+  when:
+    - ansible_distribution == 'RedHat'
+

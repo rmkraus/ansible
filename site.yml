@@ -29,6 +29,7 @@
   become_user: root
 
   roles:
+    - rhsm
     - dns_records
     - ansible-deps
     - root-user
