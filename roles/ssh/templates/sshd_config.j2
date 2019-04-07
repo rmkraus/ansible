@@ -154,9 +154,10 @@ AcceptEnv XMODIFIERS
 # override default of no subsystems
 Subsystem	sftp	/usr/libexec/openssh/sftp-server
 
-# Example of overriding settings on a per-user basis
-#Match User anoncvs
-#	X11Forwarding no
-#	AllowTcpForwarding no
-#	PermitTTY no
-#	ForceCommand cvs server
+# IPA Client Configuration
+KerberosAuthentication no
+UsePAM yes
+AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+GSSAPIAuthentication yes
+ChallengeResponseAuthentication yes
+AuthorizedKeysCommandUser nobody

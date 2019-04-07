@@ -32,12 +32,6 @@
     - bind
     - config
 
-- debug:
-    msg: "{{ bind_master_zone_files }}"
-  tags:
-    - bind
-    - config
-
 - name: install blank zone templates as needed
   template:
     dest: "/var/named/{{ item.item.name }}"

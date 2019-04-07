@@ -3,4 +3,5 @@ lynis_group_exceptions:
   - FILE-6310  # local vm's don't need proper partitioning at the moment
 ntp_servers:
   - pool.ntp.org
+ipa_client: no
 ...

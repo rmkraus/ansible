@@ -12,7 +12,10 @@ inf-1   ansible_host=192.168.4.4 mac_address=b8:27:eb:dd:60:e6 pxe_profile=rhel-
 # host-3  ansible_host=host-3.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhel-7-x86_64
 
 [rhidm]
-ipa     ansible_host=ipa.lab.rmkra.us mac_address=08:00:27:da:53:7c pxe_profile=rhel-7-x86_64
+ipa       ansible_host=ipa.lab.rmkra.us mac_address=08:00:27:da:53:7c pxe_profile=rhel-7-x86_64
+
+[generic]
+sandbox ansible_host=sandbox.lab.rmkra.us mac_address=b8:27:eb:04:ad:07 pxe_profile=rhel-7-x86_64
 
 
 # Mac computers

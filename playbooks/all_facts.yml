@@ -45,5 +45,5 @@
 
     - name: custom var
       debug:
-        msg: "{{ domain_services.cobbler.password }}"
+        msg: "{{ domain_services.freeipa.password }}"
       tags: custom

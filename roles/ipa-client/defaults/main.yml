@@ -1,0 +1,6 @@
+---
+# defaults file for ipa-client
+ipa_client: yes
+ipa_client_principal: admin
+ipa_client_pass: password
+ipa_server_install_flags:

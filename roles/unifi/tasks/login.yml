@@ -15,6 +15,15 @@
   register: unifi_login
   run_once: yes
   delegate_to: localhost
+  check_mode: no
+  tags:
+    - ubnt
+    - unifi
+
+- name: show unifi login results
+  debug:
+    var: unifi_login
+    verbosity: 1
   tags:
     - ubnt
     - unifi
@@ -35,6 +44,7 @@
   register: unifi_meta
   ignore_errors: yes
   delegate_to: localhost
+  check_mode: no
   tags:
     - ubnt
     - unifi
@@ -64,6 +74,7 @@
   register: unifi_groups_meta
   ignore_errors: yes
   delegate_to: localhost
+  check_mode: no
   tags:
     - ubnt
     - unifi

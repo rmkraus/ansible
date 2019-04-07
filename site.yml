@@ -35,11 +35,14 @@
     - root-user
     - lynis
     - ntp
-    - ssh
     - hardening
     - monitoring
     - filesystem
     - postfix
+    - role: ipa-client
+      ipa_client_principal: "{{ domain_services.freeipa.user }}"
+      ipa_client_pass: "{{ domain_services.freeipa.password }}"
+    - ssh
 
 - name: pxe boot/dhcp server
   hosts: pxe_server

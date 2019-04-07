@@ -7,6 +7,7 @@
     headers:
       Cookie: "{{ unifi_session }}"
   delegate_to: localhost
+  check_mode: no
   tags:
     - ubnt
     - unifi
