@@ -6,10 +6,10 @@ inf-0   ansible_host=192.168.4.3 mac_address=b8:27:eb:d7:51:49 pxe_profile=rhel-
 inf-1   ansible_host=192.168.4.4 mac_address=b8:27:eb:dd:60:e6 pxe_profile=rhel-7-x86_64
 
 [hosts]
-# host-0
-# host-1  ansible_host=host-1.lab.rmkra.us mac_address=ac:1f:6b:6c:5b:a4 pxe_profile=rhel-7-x86_64
-# host-2  ansible_host=host-2.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhel-7-x86_64
-# host-3  ansible_host=host-3.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhel-7-x86_64
+# host-0  ansible_host=host-0.lab.rmkra.us mac_address=ac:1f:6b:73:2d:10 pxe_profile=rhvh-4.2-x86_64
+# host-1  ansible_host=host-1.lab.rmkra.us mac_address=ac:1f:6b:6c:5b:a4 pxe_profile=rhvh-4.2-x86_64
+# host-2  ansible_host=host-2.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhvh-4.2-x86_64
+# host-3  ansible_host=host-3.lab.rmkra.us mac_address=ac:1f:6b:73:2d:24 pxe_profile=rhvh-4.2-x86_64
 
 [rhidm]
 ipa       ansible_host=ipa.lab.rmkra.us mac_address=08:00:27:da:53:7c pxe_profile=rhel-7-x86_64
