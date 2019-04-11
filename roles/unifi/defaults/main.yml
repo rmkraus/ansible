@@ -1,6 +1,9 @@
 ---
 # defaults file for unifi-login
+unifi_gather_facts: yes
 unifi_server: localhost:8443
 unifi_user: ubnt
 unifi_pass: password
 unifi_site: default
+unifi_vpn_medium: 1
+unifi_vpn_type: 3

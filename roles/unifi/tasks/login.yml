@@ -45,6 +45,7 @@
   ignore_errors: yes
   delegate_to: localhost
   check_mode: no
+  when: unifi_gather_facts
   tags:
     - ubnt
     - unifi
@@ -58,8 +59,10 @@
     unifi_ip: "{{ unifi_meta.json.data.0['fixed_ip'] | default(unifi_meta.json.data.0['ip'] | default('')) }}"
     unifi_ip_type: "{% if 'fixed_ip' in unifi_meta.json.data.0 %}fixed{% else %}floating{% endif %}"
     unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
-  when: "not unifi_meta.failed"
   delegate_to: localhost
+  when:
+    - unifi_gather_facts
+    - not unifi_meta.failed
   tags:
     - ubnt
     - unifi
@@ -75,6 +78,7 @@
   ignore_errors: yes
   delegate_to: localhost
   check_mode: no
+  when: unifi_gather_facts
   tags:
     - ubnt
     - unifi
@@ -82,12 +86,14 @@
 - name: parse unifi user groups
   set_fact:
       unifi_usergroups: '{{ unifi_usergroups | default({}) | combine({item.name: item._id}) }}'
-  when: "not unifi_groups_meta.failed"
   delegate_to: localhost
   run_once: yes
   loop: "{{ unifi_groups_meta.json.data }}"
   loop_control:
     label: "{{ item.name }}"
+  when:
+    - unifi_gather_facts
+    - not unifi_groups_meta.failed
   tags:
     - ubnt
     - unifi

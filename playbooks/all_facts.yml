@@ -45,5 +45,5 @@
 
     - name: custom var
       debug:
-        msg: "{{ domain_services.freeipa.password }}"
+        msg: "{{ domain_services.unifi.password }}"
       tags: custom

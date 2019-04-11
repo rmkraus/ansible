@@ -1,0 +1,23 @@
+---
+- name: create vpn user
+  uri:
+    url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/rest/account
+    method: POST
+    validate_certs: no
+    headers:
+      Cookie: "{{ unifi_session }}"
+    body:
+      name: "{{ unifi_vpn_user }}"
+      tunnel_medium_type: "{{ unifi_vpn_medium }}"
+      tunnel_type: "{{ unifi_vpn_type }}"
+      x_password: "{{ unifi_vpn_pass }}"
+    body_format: json
+    status_code:
+      - 200
+      - 400
+  register: unifi_action
+  changed_when: unifi_action.status == 200
+  delegate_to: localhost
+  tags:
+    - ubnt
+    - unifi

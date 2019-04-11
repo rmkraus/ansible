@@ -1,0 +1,101 @@
+#!/usr/bin/ansible-playbook --skip-tags=email
+---
+- name: create user
+  gather_facts: no
+  hosts: localhost
+
+  vars_prompt:
+    - name: "username"
+      prompt: "Username"
+      private: no
+    - name: "firstname"
+      prompt: "First Name"
+      private: no
+    - name: "lastname"
+      prompt: "Last Name"
+      private: no
+    - name: "email"
+      prompt: "Email Address"
+      private: no
+    - name: "password"
+      prompt: "Password"
+      private: yes
+    - name: "password_check"
+      prompt: "Verify Password"
+      private: yes
+    - name: "continue"
+      prompt: "Check all inputs. Press Enter to continue."
+      private: yes
+
+  tasks:
+    - name: verify password inputs
+      fail:
+        msg: Passwords do not match
+      when: password != password_check
+      tags:
+        - ipa
+        - vpn
+
+    - name: ensure user exists in ipa
+      ipa_user:
+        name: "{{ username }}"
+        state: present
+        givenname: "{{ firstname }}"
+        sn: "{{ lastname }}"
+        displayname: "{{ firstname}} {{ lastname }}"
+        password: "{{ password }}"
+        ipa_host: "{{ domain_services.freeipa.server }}"
+        ipa_user: "{{ domain_services.freeipa.user }}"
+        ipa_pass: "{{ domain_services.freeipa.password }}"
+        validate_certs: False
+      delegate_to: localhost
+      tags: ipa
+
+    - name: create email alias
+      uri:
+        url: https://{{ domain_services.easydns.api_server }}/mail/maps/{{ domain_services.easydns.domain }}?format=json
+        user: "{{ domain_services.easydns.api_token }}"
+        password: "{{ domain_services.easydns.api_key }}"
+        force_basic_auth: yes
+        method: PUT
+        body:
+          domain: "{{ domain_services.easydns.domain }}"
+          host: "@"
+          alias: "{{ username }}"
+          destination: "{{ email }},"
+          active: "1"
+        body_format: json
+      delegate_to: localhost
+      tags: email
+
+    - name: login to network equipment
+      include_role:
+        name: unifi
+      vars:
+        unifi_action: login
+        unifi_server: "{{ domain_services.unifi.server }}"
+        unifi_user: "{{ domain_services.unifi.user }}"
+        unifi_pass: "{{ domain_services.unifi.password }}"
+        unifi_gather_facts: no
+      delegate_to: localhost
+      tags: vpn
+
+    - name: create vpn user account
+      include_role:
+        name: unifi
+      vars:
+        unifi_action: vpn_user
+        unifi_server: "{{ domain_services.unifi.server }}"
+        unifi_vpn_user: "{{ username }}"
+        unifi_vpn_pass: "{{ password }}"
+      delegate_to: localhost
+      tags: vpn
+
+    - name: logout of network equipment
+      include_role:
+        name: unifi
+      vars:
+        unifi_action: logout
+        unifi_server: "{{ domain_services.unifi.server }}"
+      delegate_to: localhost
+      tags: vpn
