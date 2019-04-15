@@ -7,3 +7,4 @@
     password: "{{ domain_services.cobbler.password }}"
     use_ssl: yes
   delegate_to: localhost
+  run_once: yes
