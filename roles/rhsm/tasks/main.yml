@@ -11,3 +11,10 @@
   tags:
     - rhsm
 
+- name: ensure repositories are properly set
+  rhsm_repository:
+    name: '{{ item.name }}'
+    state: '{{ item.state | default("enabled") }}'
+  loop: "{{ rhsm_repos }}"
+  tags:
+    - rhsm

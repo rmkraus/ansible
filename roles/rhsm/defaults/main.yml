@@ -4,3 +4,5 @@ rhsm:
   username:
   password:
   pools: []
+rhsm_repos: []
+
