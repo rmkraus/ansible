@@ -78,4 +78,12 @@
 
   roles:
     - ipa-server
+
+- name: rhhi hosts
+  hosts: hosts
+  become: yes
+  become_user: root
+
+  roles:
+    - disks
 ...

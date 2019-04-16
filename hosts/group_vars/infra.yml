@@ -32,6 +32,12 @@ bind_zones:
   - name: mgmt.rmkra.us.
     type: forward
     masters: 192.168.4.1;
+  - name: nas.rmkra.us.
+    type: forward
+    masters: 192.168.4.1;
+  - name: 5.168.192.in-addr.arpa.
+    type: forward
+    masters: 192.168.4.1;
   - name: 4.168.192.in-addr.arpa.
     type: master
     masters: 192.168.4.3;
