@@ -3,4 +3,4 @@
 ipa_client: yes
 ipa_client_principal: admin
 ipa_client_pass: password
-ipa_server_install_flags:
+ipa_client_install_flags:
