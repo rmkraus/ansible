@@ -7,3 +7,10 @@
   tags:
     - dns_records
     - dns
+
+- name: ensure hostname is set
+  hostname:
+    name: "{{ inventory_hostname }}"
+  tags:
+    - dns_records
+    - hostname
