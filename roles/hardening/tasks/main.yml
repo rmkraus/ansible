@@ -95,7 +95,6 @@
     - jffs2
     - squashfs
     - udf
-    - fuse
   notify: reboot host
   tags:
     - hardening
