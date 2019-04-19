@@ -80,7 +80,7 @@ domain_services:
 usergroup: 'Lab'
 dns_records_primary_forward_zone: 'lab.rmkra.us'
 dns_records_primary_reverse_zone: '4.168.192.in-addr.arpa'
-ipa_client_install_flags: '--mkhomedir --no-sshd'
+ipa_client_install_flags: '--mkhomedir --no-sshd --no-ntp --force-join'
 
 ## Lynis Security Scanning configuration
 lynis_global_exceptions:
