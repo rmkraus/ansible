@@ -11,24 +11,8 @@ bind_update_key_secret: !vault |
 bind_master: inf-0
 bind_zones:
   - name: lab.rmkra.us.
-    type: master
-    masters: 192.168.4.3;
-    start:
-      primary_ns_name: inf-0.lab.rmkra.us.
-      admin_ns_name: rmkra.us.
-      nameservers:
-        - inf-0.lab.rmkra.us.
-        - inf-1.lab.rmkra.us.
-      records:
-        - name: cobbler
-          type: A
-          value: 192.168.4.2
-        - name: inf-0
-          type: A
-          value: 192.168.4.3
-        - name: inf-1
-          type: A
-          value: 192.168.4.4
+    type: slave
+    masters: 192.168.4.15;
   - name: mgmt.rmkra.us.
     type: forward
     masters: 192.168.4.1;
@@ -39,24 +23,8 @@ bind_zones:
     type: forward
     masters: 192.168.4.1;
   - name: 4.168.192.in-addr.arpa.
-    type: master
-    masters: 192.168.4.3;
-    start:
-      primary_ns_name: inf-0.lab.rmkra.us.
-      admin_ns_name: rmkra.us.
-      nameservers:
-        - inf-0.lab.rmkra.us.
-        - inf-1.lab.rmkra.us.
-      records:
-        - name: 2
-          type: PTR
-          value: cobbler.lab.rmkra.us.
-        - name: 3
-          type: PTR
-          value: inf-0.lab.rmkra.us.
-        - name: 4
-          type: PTR
-          value: inf-1.lab.rmkra.us.
+    type: slave
+    masters: 192.168.4.15;
   - name: 3.168.192.in-addr.arpa.
     type: forward
     masters: 192.168.4.1;
