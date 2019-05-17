@@ -30,6 +30,7 @@
 
   roles:
     - root-user
+    - rhsm
 
 - name: core configuration to all hosts
   hosts: all:!macs:!networking:!appliances
