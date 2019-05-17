@@ -23,8 +23,16 @@
         - dns
         - dhcp
 
+- name: basic configuratoin to appliances
+  hosts: appliances
+  become: yes
+  become_user: root
+
+  roles:
+    - root-user
+
 - name: core configuration to all hosts
-  hosts: all:!macs:!networking
+  hosts: all:!macs:!networking:!appliances
   become: yes
   become_user: root
 

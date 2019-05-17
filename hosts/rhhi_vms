@@ -1,6 +1,8 @@
 [rh_tower]
 tower   ansible_host=tower.lab.rmkra.us mac_address=56:6f:c7:2e:00:00 pxe_profile=rhel-7-x86_64
+
+[cloudforms]
 cfme    ansible_host=cfme.lab.rmkra.us  mac_address=56:6f:c7:2e:00:03 pxe_profile=rhel-7-x86_64
 
-
-
+[rhhi]
+HostedEngine  ansible_host=rhv.lab.rmkra.us mac_address=00:16:3e:6b:7c:5e pxe_profile=rhel-7-x86_64
