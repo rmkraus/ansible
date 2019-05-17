@@ -1,14 +1,15 @@
 - name: insert custom defined records
-  nsupdate:
-    server: "{{ domain_services.dns.server }}"
-    record: "{{ item.name }}"
-    type: "{{ item.type | default('A') }}"
-    value: "{{ item.value | default(unifi_ip) }}"
-    key_algorithm: "{{ domain_services.dns.algorithm }}"
-    key_secret: "{{ domain_services.dns.secret }}"
-    key_name: '{{ domain_services.dns.key_name }}'
-    zone: '{{ item.zone }}'
+  ipa_dnsrecord:
+    ipa_user: '{{ domain_services.freeipa.user }}'
+    ipa_host: '{{ domain_services.freeipa.server }}'
+    ipa_pass: '{{ domain_services.freeipa.password }}'
+    validate_certs: no
     state: '{% if dns_records_state == "present" %}{{ item.state | default("present") }}{% else %}{{ dns_records_state }}{% endif %}'
+    zone_name: '{{ item.zone }}'
+    record_name: "{{ item.name }}"
+    record_type: "{{ item.type | default('A') }}"
+    record_value: "{{ item.value | default(unifi_ip) }}"
+    record_ttl: 300
   delegate_to: localhost
   loop: '{{ dns_records_custom_records }}'
   loop_control:

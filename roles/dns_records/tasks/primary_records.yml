@@ -1,16 +1,17 @@
 ---
 # tasks file for dns_records
 - name: set primary dns forward record
-  nsupdate:
-    server: "{{ domain_services.dns.server }}"
-    record: "{{ inventory_hostname.split('.').0 }}"
-    type: "A"
-    value: "{{ unifi_ip }}"
-    key_algorithm: "{{ domain_services.dns.algorithm }}"
-    key_secret: "{{ domain_services.dns.secret }}"
-    key_name: '{{ domain_services.dns.key_name }}'
-    zone: '{{ dns_records_primary_forward_zone }}'
+  ipa_dnsrecord:
+    ipa_user: '{{ domain_services.freeipa.user }}'
+    ipa_host: '{{ domain_services.freeipa.server }}'
+    ipa_pass: '{{ domain_services.freeipa.password }}'
+    validate_certs: no
     state: "{{ dns_records_state }}"
+    zone_name: '{{ dns_records_primary_forward_zone }}'
+    record_name: "{{ inventory_hostname.split('.').0 }}"
+    record_type: "A"
+    record_value: "{{ unifi_ip }}"
+    record_ttl: 300
   delegate_to: localhost
   when:
     - unifi_ip is not undefined
@@ -29,16 +30,17 @@
     - dns
 
 - name: set primary dns reverse record
-  nsupdate:
-    server: "{{ domain_services.dns.server }}"
-    record: "{{ dns_records_reverse | replace('.' + dns_records_primary_reverse_zone, '') }}"
-    type: "PTR"
-    value: "{{ inventory_hostname.split('.').0 + '.' + dns_records_primary_forward_zone }}."
-    key_algorithm: "{{ domain_services.dns.algorithm }}"
-    key_secret: "{{ domain_services.dns.secret }}"
-    key_name: '{{ domain_services.dns.key_name }}'
-    zone: '{{ dns_records_primary_reverse_zone }}'
+  ipa_dnsrecord:
+    ipa_user: '{{ domain_services.freeipa.user }}'
+    ipa_host: '{{ domain_services.freeipa.server }}'
+    ipa_pass: '{{ domain_services.freeipa.password }}'
+    validate_certs: no
     state: "{{ dns_records_state }}"
+    zone_name: '{{ dns_records_primary_reverse_zone }}'
+    record_name: "{{ dns_records_reverse | replace('.' + dns_records_primary_reverse_zone, '') }}"
+    record_type: "PTR"
+    record_value: "{{ inventory_hostname.split('.').0 + '.' + dns_records_primary_forward_zone }}."
+    record_ttl: 300
   delegate_to: localhost
   when:
     - unifi_ip is not undefined
