@@ -86,4 +86,12 @@
 
   roles:
     - disks
+
+- name: ansible tower servers
+  hosts: rh_tower
+  become: yes
+  become_user: root
+
+  roles:
+    - tower
 ...
