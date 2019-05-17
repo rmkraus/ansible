@@ -40,6 +40,7 @@
         - dns
 
     - role: dns_records
+      dns_records_set_local: no
       tags:
         - dns
 
@@ -48,6 +49,3 @@
       pxe_boot_netboot: yes
       tags:
         - pxe
-
-    # reboot if ipmi
-    # go to site.yml?
