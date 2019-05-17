@@ -15,6 +15,7 @@
 
     - role: dns_records
       dns_records_state: absent
+      dns_records_set_local: no
       tags:
         - dns
 
