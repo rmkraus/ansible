@@ -162,47 +162,6 @@
     - cobbler
     - services
 
-- name: ensure dummy image is loaded
-  copy:
-    src: dummy.iso
-    dest: "{{ ansible_deps_artifacts }}/cobbler/dummy.iso"
-  notify: install dummy iso
-  tags:
-    - cobbler
-    - config
-
-- meta: flush_handlers
-
-- name: ensure ansible/cobbler service account exists
-  user:
-    name: "{{ cobbler_user }}"
-    password: "{{ cobbler_password_crypt }}"
-    state: present
-  tags:
-    - cobbler
-    - config
-
-- name: ensure cobbler server is self managing
-  cobbler_system:
-    host: "{{ cobbler_server }}"
-    username: "{{ cobbler_user }}"
-    password: "{{ cobbler_password }}"
-    name: "{{ ansible_fqdn }}"
-    use_ssl: yes
-    properties:
-      netboot_enabled: no
-      status: production
-      hostname: "{{ ansible_fqdn }}"
-      image: dummy
-    interfaces: {"primary": {"macaddress": "{{ ansible_default_ipv4['macaddress'] }}", "ipaddress": "{{ ansible_default_ipv4['address'] }}", "dnsname": "{{ ansible_fqdn }}", "dhcptag": "default"}}
-  delegate_to: localhost
-  notify: cobbler sync
-  tags:
-    - cobbler
-    - config
-
-- meta: flush_handlers
-
 - name: ensure named service is in the correct state
   service:
     name: "named"
@@ -211,4 +170,3 @@
   tags:
     - cobbler
     - services
-
