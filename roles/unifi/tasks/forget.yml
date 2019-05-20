@@ -1,5 +1,5 @@
 ---
-- name: set static ip
+- name: forget the host
   uri:
     url: https://{{ unifi_server }}/api/s/{{ unifi_site }}/cmd/stamgr
     method: POST
@@ -28,4 +28,3 @@
   tags:
     - ubnt
     - unifi
-

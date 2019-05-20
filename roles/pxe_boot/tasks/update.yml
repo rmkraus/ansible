@@ -2,9 +2,9 @@
 # tasks file for pxe_boot
 - name: ensure cobbler will pxe boot the host
   cobbler_system:
-    host: "{{ domain_services.cobbler.server }}"
-    username: "{{ domain_services.cobbler.user }}"
-    password: "{{ domain_services.cobbler.password }}"
+    host: "{{ pxe_boot_server }}"
+    username: "{{ pxe_boot_user }}"
+    password: "{{ pxe_boot_password }}"
     name: "{{ inventory_hostname }}"
     use_ssl: yes
     properties:

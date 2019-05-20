@@ -1,10 +1,20 @@
 #!/usr/bin/ansible-playbook
 ---
-- name: join server to the network
+- name: remove server from the network
   hosts: all
   gather_facts: no
 
+  vars_prompt:
+  - name: "lastpass_username"
+    prompt: "LastPass Username"
+    private: no
+  - name: "lastpass_password"
+    prompt: "LastPass Master Password"
+    private: yes
+
   roles:
+    - role: lastpass
+
     - role: unifi
       unifi_action: login
       unifi_server: "{{ domain_services.unifi.server }}"
@@ -21,6 +31,9 @@
 
     - role: pxe_boot
       pxe_boot_action: remove
+      pxe_boot_server: cobbler.lab.rmkra.us
+      pxe_boot_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      pxe_boot_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
       tags:
         - pxe
 
