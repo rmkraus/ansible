@@ -57,7 +57,7 @@
     - role: pxe_boot
       pxe_boot_action: update
       pxe_boot_netboot: yes
-      pxe_boot_server: cobbler.lab.rmkra.us
+      pxe_boot_server: "{{ domain_services.cobbler }}"
       pxe_boot_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
       pxe_boot_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
       tags:

@@ -1,6 +1,7 @@
 ---
 ## general network infrastructure services
 domain_services:
+  cobbler: cobbler.lab.rmkra.us
   freeipa:
     server: ipa.lab.rmkra.us
     user: !vault |
