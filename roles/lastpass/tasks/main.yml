@@ -1,0 +1,30 @@
+---
+- name: check if lastpass cli is installed
+  local_action:
+    module: stat
+    path: /usr/bin/lpass
+  register: lpass
+  run_once: yes
+  tags: lastpass
+
+- name: fail is lpass is not installed
+  fail:
+    msg: "Please install the lastpass cli on the Ansible control node."
+  when: not lpass.stat.exists
+  tags: lastpass
+
+- name: ensure active session with lastpass
+  local_action: command lpass status
+  ignore_errors: yes
+  register: lpass_status
+  run_once: yes
+  tags: lastpass
+
+- name: login to lastpass if necessary
+  shell: LPASS_DISABLE_PINENTRY=1 lpass login {{ lastpass_username | quote }}
+  args:
+    stdin: "{{ lastpass_password }}"
+  delegate_to: localhost
+  when: lpass_status is failed
+  run_once: yes
+  tags: lastpass

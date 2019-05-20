@@ -1,0 +1,6 @@
+---
+- name: ensure lastpass-cli is installed
+  yum:
+    name: lastpass-cli
+    state: installed
+  tags: lastpass-cli
