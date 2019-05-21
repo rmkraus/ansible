@@ -24,9 +24,9 @@
   roles:
     - role: unifi
       unifi_action: login
-      unifi_server: "{{ domain_services.unifi.server }}"
-      unifi_user: "{{ domain_services.unifi.user }}"
-      unifi_pass: "{{ domain_services.unifi.password }}"
+      unifi_server: "{{ domain_services.unifi }}"
+      unifi_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      unifi_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
       tags:
         - dns_records
         - dns
@@ -34,7 +34,7 @@
 
     - role: unifi
       unifi_action: logout
-      unifi_server: "{{ domain_services.unifi.server }}"
+      unifi_server: "{{ domain_services.unifi }}"
       tags:
         - dns_records
         - dns
