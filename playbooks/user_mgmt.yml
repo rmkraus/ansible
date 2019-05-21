@@ -42,7 +42,7 @@
         state: present
         givenname: "{{ firstname }}"
         sn: "{{ lastname }}"
-        displayname: "{{ firstname}} {{ lastname }}"
+        displayname: "{{ firstname }} {{ lastname }}"
         password: "{{ password }}"
         ipa_host: "{{ domain_services.freeipa }}"
         ipa_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
