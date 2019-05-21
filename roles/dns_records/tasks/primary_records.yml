@@ -16,6 +16,8 @@
   become: no
   when:
     - unifi_ip is not undefined
+  register: dns
+  failed_when: 'not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
   tags:
     - dns_records
     - dns
@@ -47,6 +49,8 @@
   become: no
   when:
     - unifi_ip is not undefined
+  register: dns
+  failed_when: 'not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
   tags:
     - dns_records
     - dns

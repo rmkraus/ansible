@@ -11,7 +11,7 @@
 - name: ensure hostname is set
   hostname:
     name: "{{ inventory_hostname }}"
-  when: dns_records_set_local
+  when: dns_records_set_local | bool
   tags:
     - dns_records
     - hostname

@@ -45,7 +45,7 @@
   ignore_errors: yes
   delegate_to: localhost
   check_mode: no
-  when: unifi_gather_facts
+  when: unifi_gather_facts | bool
   tags:
     - ubnt
     - unifi
@@ -61,7 +61,7 @@
     unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
   delegate_to: localhost
   when:
-    - unifi_gather_facts
+    - unifi_gather_facts | bool
     - not unifi_meta.failed
   tags:
     - ubnt
@@ -78,7 +78,7 @@
   ignore_errors: yes
   delegate_to: localhost
   check_mode: no
-  when: unifi_gather_facts
+  when: unifi_gather_facts | bool
   tags:
     - ubnt
     - unifi
@@ -92,7 +92,7 @@
   loop_control:
     label: "{{ item.name }}"
   when:
-    - unifi_gather_facts
+    - unifi_gather_facts | bool
     - not unifi_groups_meta.failed
   tags:
     - ubnt
