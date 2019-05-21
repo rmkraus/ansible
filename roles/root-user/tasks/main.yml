@@ -26,12 +26,13 @@
     - config
 
 - name: Ensure root has configured public ssh keys
-  template:
-    src: "authorized_keys.j2"
+  lineinfile:
+    line: "{{ item }}"
     dest: /root/.ssh/authorized_keys
     owner: root
     group: root
     mode: 0600
+  loop: "{{ root_user_ssh_authorized_keys }}"
   tags:
     - root-user
     - config
@@ -39,7 +40,7 @@
 - name: Ensure the root password has been set
   user:
     name: root
-    password: "{{ root_user_password }}"
+    password: "{{ lookup('lastpass', 'root', field='encrypted') }}"
   tags:
     - root-user
     - config
