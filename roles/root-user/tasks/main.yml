@@ -40,7 +40,7 @@
 - name: Ensure the root password has been set
   user:
     name: root
-    password: "{{ lookup('lastpass', 'root', field='encrypted') }}"
+    password: "root_user_password_crypted"
   tags:
     - root-user
     - config
