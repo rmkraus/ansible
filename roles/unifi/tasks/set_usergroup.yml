@@ -7,9 +7,9 @@
     headers:
       Cookie: "{{ unifi_session }}"
     body:
-      usergroup_id: '{{ unifi_usergroups[usergroup] }}'
+      usergroup_id: '{{ unifi_usergroups[unifi_usergroup] }}'
     body_format: json
-  when: "unifi_usergroup_id != unifi_usergroups[usergroup]"
+  when: "unifi_usergroup_id != unifi_usergroups[unifi_usergroup]"
   register: unifi_action
   changed_when: unifi_action.status == 200
   delegate_to: localhost
@@ -19,9 +19,8 @@
 
 - name: update unifi meta data
   set_fact:
-    unifi_usergroup_id: '{{ unifi_usergroups[usergroup] }}'
+    unifi_usergroup_id: '{{ unifi_usergroups[unifi_usergroup] }}'
   delegate_to: localhost
   tags:
     - ubnt
     - unifi
-
