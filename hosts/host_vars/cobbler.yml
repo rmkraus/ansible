@@ -1,6 +1,6 @@
-cobbler_ssl_cert: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/cert.pem
-cobbler_ssl_key: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/privkey.pem
-cobbler_ssl_chain: /ansible_vault/ssl_certs/config/live/cobbler.lab.rmkra.us/chain.pem
+cobbler_ssl_cert: "{{ lookup('lastpass', 'Certs/cobbler.lab.rmkra.us', field='cert') }}"
+cobbler_ssl_key: "{{ lookup('lastpass', 'Certs/cobbler.lab.rmkra.us', field='privkey') }}"
+cobbler_ssl_chain: "{{ lookup('lastpass', 'Certs/cobbler.lab.rmkra.us', field='chain') }}"
 disks:
   - device: /dev/sda
     partitions:
