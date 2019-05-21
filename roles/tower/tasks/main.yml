@@ -51,7 +51,7 @@
 
 - name: ensure custom ssl certificates are installed
   copy:
-    src: "{{ item.src }}"
+    content: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
     group: awx
