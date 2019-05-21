@@ -2,9 +2,9 @@
 # tasks file for dns_records
 - name: set primary dns forward record
   ipa_dnsrecord:
-    ipa_user: '{{ domain_services.freeipa.user }}'
-    ipa_host: '{{ domain_services.freeipa.server }}'
-    ipa_pass: '{{ domain_services.freeipa.password }}'
+    ipa_user: '{{ dns_records_user }}'
+    ipa_host: '{{ dns_records_host }}'
+    ipa_pass: '{{ dns_records_password }}'
     validate_certs: no
     state: "{{ dns_records_state }}"
     zone_name: '{{ dns_records_primary_forward_zone }}'
@@ -13,6 +13,7 @@
     record_value: "{{ unifi_ip }}"
     record_ttl: 300
   delegate_to: localhost
+  become: no
   when:
     - unifi_ip is not undefined
   tags:
@@ -23,6 +24,7 @@
   set_fact:
     dns_records_reverse: "{{ unifi_ip.split('.').3 + '.' + unifi_ip.split('.').2 + '.' + unifi_ip.split('.').1 + '.' + unifi_ip.split('.').0 + '.in-addr.arpa' }}"
   delegate_to: localhost
+  become: no
   when:
     - unifi_ip is not undefined
   tags:
@@ -31,9 +33,9 @@
 
 - name: set primary dns reverse record
   ipa_dnsrecord:
-    ipa_user: '{{ domain_services.freeipa.user }}'
-    ipa_host: '{{ domain_services.freeipa.server }}'
-    ipa_pass: '{{ domain_services.freeipa.password }}'
+    ipa_user: '{{ dns_records_user }}'
+    ipa_host: '{{ dns_records_host }}'
+    ipa_pass: '{{ dns_records_password }}'
     validate_certs: no
     state: "{{ dns_records_state }}"
     zone_name: '{{ dns_records_primary_reverse_zone }}'
@@ -42,6 +44,7 @@
     record_value: "{{ inventory_hostname.split('.').0 + '.' + dns_records_primary_forward_zone }}."
     record_ttl: 300
   delegate_to: localhost
+  become: no
   when:
     - unifi_ip is not undefined
   tags:

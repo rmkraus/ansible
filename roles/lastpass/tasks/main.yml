@@ -3,6 +3,7 @@
   local_action:
     module: stat
     path: /usr/bin/lpass
+  changed_when: no
   register: lpass
   run_once: yes
   tags: lastpass
@@ -15,6 +16,7 @@
 
 - name: ensure active session with lastpass
   local_action: command lpass status
+  changed_when: no
   ignore_errors: yes
   register: lpass_status
   run_once: yes

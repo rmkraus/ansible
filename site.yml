@@ -1,8 +1,25 @@
 #!/usr/bin/ansible-playbook
 ---
 
+- name: login to LastPass
+  hosts: all
+  gather_facts: no
+  become: no
+
+  vars_prompt:
+  - name: "lastpass_username"
+    prompt: "LastPass Username"
+    private: no
+  - name: "lastpass_password"
+    prompt: "LastPass Master Password"
+    private: yes
+
+  roles:
+    - lastpass
+
 - name: get host information from switch
   hosts: all:!macs:!networking
+  gather_facts: no
 
   roles:
     - role: unifi
@@ -23,7 +40,7 @@
         - dns
         - dhcp
 
-- name: basic configuratoin to appliances
+- name: basic configuration to appliances
   hosts: appliances
   become: yes
   become_user: root
@@ -39,7 +56,10 @@
 
   roles:
     - rhsm
-    - dns_records
+    - role: dns_records
+      dns_records_host: "{{ domain_services.freeipa }}"
+      dns_records_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      dns_records_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
     - ansible-deps
     - root-user
     - lynis
@@ -49,14 +69,15 @@
     - filesystem
     - postfix
     - role: ipa-client
-      ipa_client_principal: "{{ domain_services.freeipa.user }}"
-      ipa_client_pass: "{{ domain_services.freeipa.password }}"
+      ipa_client_principal: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      ipa_client_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
     - ssh
 
 - name: pxe boot/dhcp server
   hosts: pxe_server
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - disks
@@ -67,6 +88,7 @@
   hosts: infra
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - bind
@@ -76,6 +98,7 @@
   hosts: docker
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - docker
@@ -84,6 +107,7 @@
   hosts: rhidm
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - ipa-server
@@ -92,6 +116,7 @@
   hosts: hosts
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - disks
@@ -100,6 +125,7 @@
   hosts: rh_tower
   become: yes
   become_user: root
+  gather_facts: no
 
   roles:
     - tower

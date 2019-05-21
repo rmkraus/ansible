@@ -24,6 +24,9 @@
         - dhcp
 
     - role: dns_records
+      dns_records_host: "{{ domain_services.freeipa }}"
+      dns_records_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      dns_records_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
       dns_records_state: absent
       dns_records_set_local: no
       tags:

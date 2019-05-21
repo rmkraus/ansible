@@ -44,9 +44,9 @@
         sn: "{{ lastname }}"
         displayname: "{{ firstname}} {{ lastname }}"
         password: "{{ password }}"
-        ipa_host: "{{ domain_services.freeipa.server }}"
-        ipa_user: "{{ domain_services.freeipa.user }}"
-        ipa_pass: "{{ domain_services.freeipa.password }}"
+        ipa_host: "{{ domain_services.freeipa }}"
+        ipa_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+        ipa_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
         validate_certs: False
       delegate_to: localhost
       tags: ipa
