@@ -1,5 +1,21 @@
 #!/usr/bin/ansible-playbook --skip-tags=email
 ---
+- name: login to LastPass
+  hosts: all
+  gather_facts: no
+  become: no
+
+  vars_prompt:
+  - name: "lastpass_username"
+    prompt: "LastPass Username"
+    private: no
+  - name: "lastpass_password"
+    prompt: "LastPass Master Password"
+    private: yes
+
+  roles:
+    - lastpass
+
 - name: create user
   gather_facts: no
   hosts: localhost
@@ -53,13 +69,13 @@
 
     - name: create email alias
       uri:
-        url: https://{{ domain_services.easydns.api_server }}/mail/maps/{{ domain_services.easydns.domain }}?format=json
-        user: "{{ domain_services.easydns.api_token }}"
-        password: "{{ domain_services.easydns.api_key }}"
+        url: https://{{ lookup('lastpass', 'easyDNS', field='api_server') }}/mail/maps/{{ lookup('lastpass', 'easyDNS', field='domain') }}?format=json
+        user: "{{ lookup('lastpass', 'easyDNS', field='api_token') }}"
+        password: "{{ lookup('lastpass', 'easyDNS', field='api_key') }}"
         force_basic_auth: yes
         method: PUT
         body:
-          domain: "{{ domain_services.easydns.domain }}"
+          domain: "{{ lookup('lastpass', 'easyDNS', field='domain') }}"
           host: "@"
           alias: "{{ username }}"
           destination: "{{ email }},"
