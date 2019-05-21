@@ -123,7 +123,7 @@
 
     - name: copy ssl keys and certs to cloud key
       copy:
-        src: "{{ ssl_keystore}}/{{ item.src }}"
+        src: "{{ ssl_keystore }}/{{ item.src }}"
         dest: "{{ cert_dir }}/{{ item.dest }}"
         owner: root
         group: root
