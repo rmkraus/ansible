@@ -1,9 +1,9 @@
 ---
 ## general network infrastructure services
 domain_services:
-  cobbler: cobbler.lab.rmkra.us
-  freeipa: ipa.lab.rmkra.us
-  unifi: ubnt.home.rmkra.us:8443
+  cobbler: '{{ ["target", "port"] | map("extract", lookup("dig", "_cobbler._tcp.lab.rmkra.us/SRV", "flat=0", wantlist=True).0) | map("regex_replace", "\.$", "") | join(":") }}'
+  freeipa: '{{ ["target", "port"] | map("extract", lookup("dig", "_kerberos._tcp.lab.rmkra.us/SRV", "flat=0", wantlist=True).0) | map("regex_replace", "\.$", "") | join(":") }}'
+  unifi: '{{ ["target", "port"] | map("extract", lookup("dig", "_unifi._tcp.lab.rmkra.us/SRV", "flat=0", wantlist=True).0) | map("regex_replace", "\.$", "") | join(":") }}'
 unifi_usergroup: 'Lab'
 dns_records_primary_forward_zone: 'lab.rmkra.us'
 dns_records_primary_reverse_zone: '4.168.192.in-addr.arpa'

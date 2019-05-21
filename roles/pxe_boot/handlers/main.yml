@@ -2,7 +2,8 @@
 # handlers file for pxe_boot
 - name: cobbler sync
   cobbler_sync:
-    host: "{{ pxe_boot_server }}"
+    host: "{{ pxe_boot_server.split(':').0 }}"
+    port: "{{ pxe_boot_server.split(':').1 }}"
     username: "{{ pxe_boot_user }}"
     password: "{{ pxe_boot_password }}"
     use_ssl: yes

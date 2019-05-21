@@ -3,7 +3,7 @@
 - name: set primary dns forward record
   ipa_dnsrecord:
     ipa_user: '{{ dns_records_user }}'
-    ipa_host: '{{ dns_records_host }}'
+    ipa_host: '{{ dns_records_host.split(":").0 }}'
     ipa_pass: '{{ dns_records_password }}'
     validate_certs: no
     state: "{{ dns_records_state }}"
@@ -34,7 +34,7 @@
 - name: set primary dns reverse record
   ipa_dnsrecord:
     ipa_user: '{{ dns_records_user }}'
-    ipa_host: '{{ dns_records_host }}'
+    ipa_host: '{{ dns_records_host.split(":").0 }}'
     ipa_pass: '{{ dns_records_password }}'
     validate_certs: no
     state: "{{ dns_records_state }}"

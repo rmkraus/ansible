@@ -1,7 +1,7 @@
 - name: insert custom defined records
   ipa_dnsrecord:
     ipa_user: '{{ dns_records_user }}'
-    ipa_host: '{{ dns_records_host }}'
+    ipa_host: '{{ dns_records_host.split(":").0 }}'
     ipa_pass: '{{ dns_records_password }}'
     validate_certs: no
     state: '{% if dns_records_state == "present" %}{{ item.state | default("present") }}{% else %}{{ dns_records_state }}{% endif %}'
