@@ -4,7 +4,7 @@
   yum:
     name: ipa-client
     state: installed
-  when: ipa_client
+  when: ipa_client | bool
   tags:
     - ipa-client
     - packages
@@ -18,7 +18,7 @@
         --log-file=/var/local/ansible/ipa-client-install.log
   args:
     creates: /var/local/ansible/ipa-client-install.log
-  when: ipa_client
+  when: ipa_client | bool
   tags:
     - ipa-server
     - config

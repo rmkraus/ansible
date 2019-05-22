@@ -6,7 +6,7 @@
       - psacct
       - sysstat
     state: installed
-  when: monitoring
+  when: monitoring | bool
   tags:
     - monitoring
     - packages
@@ -19,9 +19,7 @@
   with_items:
     - psacct
     - sysstat
-  when: monitoring
+  when: monitoring | bool
   tags:
     - monitoring
     - services
-
-
