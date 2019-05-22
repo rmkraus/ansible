@@ -40,7 +40,7 @@
 - name: Ensure the root password has been set
   user:
     name: root
-    password: "root_user_password_crypted"
+    password: "{{ root_user_password_crypted }}"
   tags:
     - root-user
     - config
