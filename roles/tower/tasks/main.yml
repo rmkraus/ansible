@@ -45,6 +45,8 @@
   args:
     chdir: "/var/local/ansible/tower/ansible-tower-setup-{{ tower_version }}"
     creates: "/usr/bin/ansible-tower-service"
+  async: 600
+  poll: 10
   tags:
     - tower
     - packages
@@ -61,7 +63,7 @@
       dest: "/etc/tower/tower.cert"
     - src: "{{ tower_ssl_key }}"
       dest: "/etc/tower/tower.key"
-  when: tower_custom_cert
+  when: tower_custom_cert | bool
   notify: restart tower
   tags:
     - tower

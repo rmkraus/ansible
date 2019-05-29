@@ -32,6 +32,7 @@
     owner: root
     group: root
     mode: 0600
+    create: yes
   loop: "{{ root_user_ssh_authorized_keys }}"
   tags:
     - root-user
