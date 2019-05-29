@@ -38,8 +38,9 @@
 
 - name: Ensure the default profile is secure
   lineinfile:
-    line: "umask 027"
+    line: "umask {{ hardening_default_umask }}"
     dest: /etc/profile.d/custom.sh
+    regexp: "^umask "
     owner: root
     group: root
     mode: 0644

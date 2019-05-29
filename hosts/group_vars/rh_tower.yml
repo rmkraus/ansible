@@ -9,6 +9,8 @@ disks:
         start: '0%'
         end: '100%'
         unit: '%'
+        fstype: xfs
+        mount: /var/lib/pgsql
 tower_admin_password: "{{ lookup('lastpass', 'root', field='encrypted') }}"
 tower_pg_password: "{{ lookup('lastpass', 'Tower', field='pg_password') }}"
 tower_rabbitmq_password: "{{ lookup('lastpass', 'Tower', field='rabbitmq_password') }}"
@@ -16,3 +18,5 @@ tower_rabbitmq_password: "{{ lookup('lastpass', 'Tower', field='rabbitmq_passwor
 tower_ssl_cert: "{{ lookup('lastpass', 'Certs/tower.lab.rmkra.us', field='cert') }}"
 tower_ssl_key: "{{ lookup('lastpass', 'Certs/tower.lab.rmkra.us', field='privkey') }}"
 tower_custom_cert: yes
+
+hardening_default_umask: "022"
