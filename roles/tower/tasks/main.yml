@@ -45,7 +45,7 @@
   args:
     chdir: "/var/local/ansible/tower/ansible-tower-setup-{{ tower_version }}"
     creates: "/usr/bin/ansible-tower-service"
-  async: 600
+  async: 3600
   poll: 10
   tags:
     - tower
