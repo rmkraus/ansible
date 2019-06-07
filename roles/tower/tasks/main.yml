@@ -23,6 +23,7 @@
     src: "/var/local/ansible/tower/ansible-tower-setup-{{ tower_version }}.tar.gz"
     dest: "/var/local/ansible/tower"
     remote_src: yes
+  register: tower_extract
   tags:
     - tower
     - packages
@@ -34,6 +35,8 @@
     owner: root
     group: root
     mode: 0644
+    backup: yes
+  register: tower_inventory
   tags:
     - tower
     - packages
@@ -44,9 +47,10 @@
     ./setup.sh
   args:
     chdir: "/var/local/ansible/tower/ansible-tower-setup-{{ tower_version }}"
-    creates: "/usr/bin/ansible-tower-service"
   async: 3600
   poll: 10
+  when:
+    - tower_download is changed or tower_extract is changed or tower_inventory is changed
   tags:
     - tower
     - packages
