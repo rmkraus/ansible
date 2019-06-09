@@ -1,8 +1,6 @@
 ---
 # defaults file for rhsm
-rhsm:
-  username:
-  password:
-  pools: []
+rhsm_username:
+rhsm_password:
+rhsm_pool: 
 rhsm_repos: []
-

@@ -3,9 +3,10 @@
 - name: ensure red hat systems are have subscription
   redhat_subscription:
     state: present
-    username: "{{ rhsm.username }}"
-    password: "{{ rhsm.password }}"
-    pool_ids: "{{ rhsm.pools }}"
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    pool_ids:
+      - "{{ rhsm_pool }}"
   when:
     - ansible_distribution == 'RedHat'
   tags:
