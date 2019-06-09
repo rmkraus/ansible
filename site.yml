@@ -130,4 +130,6 @@
   roles:
     - disks
     - tower
+    - epel
+    - lastpass-cli
 ...
