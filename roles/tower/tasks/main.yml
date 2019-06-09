@@ -73,3 +73,18 @@
     - tower
     - ssl
     - config
+
+- name: ensure required directories exist in AWX home
+  file:
+    state: directory
+    path: "/var/lib/awx/{{ item }}"
+    owner: awx
+    group: awx
+    mode: 0750
+  loop:
+    - .config
+    - .local
+    - .local/share
+  tags:
+    - tower
+    - filesystem
