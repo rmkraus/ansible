@@ -1,7 +1,7 @@
 #!/usr/bin/ansible-playbook
 ---
 - name: remove server from the network
-  hosts: all
+  hosts: "{{ new_machines|default('all') }}"
   gather_facts: no
 
   vars_prompt:
