@@ -17,7 +17,10 @@
   when:
     - unifi_ip is not undefined or dns_records_state == 'absent'
   register: dns
-  failed_when: '(dns.msg is undefined and dns_records_state == "absent") or not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
+  failed_when:
+    - 'not (dns.msg is undefined and dns_records_state == "absent")'
+    - 'not dns.changed'
+    - 'dns.msg|default("") != "response dnsrecord_mod: no modifications to be performed" )'
   tags:
     - dns_records
     - dns
@@ -50,7 +53,10 @@
   when:
     - unifi_ip is not undefined
   register: dns
-  failed_when: 'not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
+  failed_when:
+    - 'not (dns.msg is undefined and dns_records_state == "absent")'
+    - 'not dns.changed'
+    - 'dns.msg|default("") != "response dnsrecord_mod: no modifications to be performed" )'
   tags:
     - dns_records
     - dns
