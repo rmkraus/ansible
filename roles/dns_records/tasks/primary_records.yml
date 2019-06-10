@@ -32,6 +32,7 @@
   become: no
   when:
     - unifi_ip is not undefined
+    - unifi_ip  != ''
   tags:
     - dns_records
     - dns
@@ -52,6 +53,7 @@
   become: no
   when:
     - unifi_ip is not undefined
+    - unifi_ip  != ''
   register: dns
   failed_when:
     - 'not (dns.msg is undefined and dns_records_state == "absent")'
