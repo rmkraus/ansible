@@ -6,12 +6,14 @@
   changed_when: no
   register: lpass
   run_once: yes
+  check_mode: no
   tags: lastpass
 
 - name: fail is lpass is not installed
   fail:
     msg: "Please install the lastpass cli on the Ansible control node."
   when: not lpass.stat.exists
+  check_mode: no
   tags: lastpass
 
 - name: ensure active session with lastpass
@@ -20,6 +22,7 @@
   ignore_errors: yes
   register: lpass_status
   run_once: yes
+  check_mode: no
   tags: lastpass
 
 - name: login to lastpass if necessary
@@ -29,4 +32,5 @@
   delegate_to: localhost
   when: lpass_status is failed
   run_once: yes
+  check_mode: no
   tags: lastpass
