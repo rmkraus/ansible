@@ -10,14 +10,14 @@
     zone_name: '{{ dns_records_primary_forward_zone }}'
     record_name: "{{ inventory_hostname.split('.').0 }}"
     record_type: "A"
-    record_value: "{{ unifi_ip }}"
+    record_value: "{{ unifi_ip | default('') }}"
     record_ttl: 300
   delegate_to: localhost
   become: no
   when:
-    - unifi_ip is not undefined
+    - unifi_ip is not undefined or dns_records_state == 'absent'
   register: dns
-  failed_when: 'not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
+  failed_when: '(dns.msg is undefined and dns_records_state == 'absent') or not ( dns.changed or dns.msg == "response dnsrecord_mod: no modifications to be performed" )'
   tags:
     - dns_records
     - dns
