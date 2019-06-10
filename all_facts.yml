@@ -20,25 +20,25 @@
   tasks:
     - name: Module Variables
       debug:
-        msg: "{{ module_msg.split('\n') }}"
+        var: vars
       tags: module
 
     - name: Environment Variables
       debug:
-        msg: "{{ environment_msg.split('\n') }}"
+        var: environment
       tags: environment
 
     - name: GROUP NAMES Variables
       debug:
-        msg: "{{ group_names_msg.split('\n') }}"
+        var: group_names
       tags: group_names
 
     - name: GROUPS Variables
       debug:
-        msg: "{{ groups_msg.split('\n') }}"
+        var: groups
       tags: groups
 
     - name: HOST Variables
       debug:
-        msg: "{{ host_msg.split('\n') }}"
+        var: hostvars
       tags: hostvars
