@@ -18,5 +18,3 @@
   loop: "{{ rhsm_repos }}"
   tags:
     - rhsm
-
-- fail:
