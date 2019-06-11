@@ -15,6 +15,7 @@
   register: unifi_action
   changed_when: unifi_action.status == 200
   delegate_to: localhost
+  become: no
   tags:
     - ubnt
     - unifi
@@ -23,7 +24,7 @@
   set_fact:
     unifi_ip_type: static
   delegate_to: localhost
+  become: no
   tags:
     - ubnt
     - unifi
-

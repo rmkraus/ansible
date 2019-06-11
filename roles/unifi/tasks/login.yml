@@ -15,6 +15,7 @@
   register: unifi_login
   run_once: yes
   delegate_to: localhost
+  become: no
   check_mode: no
   tags:
     - ubnt
@@ -32,6 +33,7 @@
   set_fact:
     unifi_session: "{{ unifi_login.set_cookie }}"
   delegate_to: localhost
+  become: no
   run_once: yes
 
 - name: get host meta data
@@ -44,6 +46,7 @@
   register: unifi_meta
   ignore_errors: yes
   delegate_to: localhost
+  become: no
   check_mode: no
   when: unifi_gather_facts | bool
   tags:
@@ -60,6 +63,7 @@
     unifi_ip_type: "{% if 'fixed_ip' in unifi_meta.json.data.0 %}fixed{% else %}floating{% endif %}"
     unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
   delegate_to: localhost
+  become: no
   when:
     - unifi_gather_facts | bool
     - not unifi_meta.failed
@@ -77,6 +81,7 @@
   register: unifi_groups_meta
   ignore_errors: yes
   delegate_to: localhost
+  become: no
   check_mode: no
   when: unifi_gather_facts | bool
   tags:
@@ -87,6 +92,7 @@
   set_fact:
       unifi_usergroups: '{{ unifi_usergroups | default({}) | combine({item.name: item._id}) }}'
   delegate_to: localhost
+  become: no
   run_once: yes
   loop: "{{ unifi_groups_meta.json.data }}"
   loop_control:

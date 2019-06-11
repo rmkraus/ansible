@@ -13,6 +13,7 @@
   register: unifi_action
   changed_when: unifi_action.status == 200
   delegate_to: localhost
+  become: no
   tags:
     - ubnt
     - unifi
@@ -21,7 +22,7 @@
   set_fact:
     unifi_name: "{{ inventory_hostname }}"
   delegate_to: localhost
+  become: no
   tags:
     - ubnt
     - unifi
-

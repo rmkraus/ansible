@@ -21,6 +21,7 @@
   set_fact:
     unifi_usergroup_id: '{{ unifi_usergroups[unifi_usergroup] }}'
   delegate_to: localhost
+  become: no
   tags:
     - ubnt
     - unifi
