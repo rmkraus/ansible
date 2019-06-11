@@ -5,8 +5,7 @@
     state: present
     username: "{{ rhsm_username }}"
     password: "{{ rhsm_password }}"
-    pool_ids:
-      - "{{ rhsm_pool }}"
+    pool_ids: "{{ rhsm_pool }}"
   when:
     - ansible_distribution == 'RedHat'
   tags:
@@ -19,3 +18,5 @@
   loop: "{{ rhsm_repos }}"
   tags:
     - rhsm
+
+- fail:
