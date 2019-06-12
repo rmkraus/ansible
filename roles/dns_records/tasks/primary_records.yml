@@ -20,7 +20,7 @@
   failed_when:
     - 'not (dns.msg is undefined and dns_records_state == "absent")'
     - 'not dns.changed'
-    - 'dns.msg|default("") != "response dnsrecord_mod: no modifications to be performed"''
+    - 'dns.msg|default("") != "response dnsrecord_mod: no modifications to be performed"'
   tags:
     - dns_records
     - dns
