@@ -51,3 +51,9 @@
       unifi_server: "{{ domain_services.unifi }}"
       tags:
         - dhcp
+
+    - role: ipa-client
+      ipa_client_action: remove
+      ipa_client_principal: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
+      ipa_client_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      ipa_client_host: "{{ domain_services.freeipa }}"
