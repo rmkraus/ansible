@@ -1,0 +1,24 @@
+---
+# tasks file for ipa-client
+- name: ensure ipa-client is installed
+  yum:
+    name: ipa-client
+    state: installed
+  when: ipa_client | bool
+  tags:
+    - ipa-client
+    - packages
+
+- name: ensure ipa-client is installed
+  command: |
+    ipa-client-install --unattended \
+        -p '{{ ipa_client_principal }}' \
+        -w '{{ ipa_client_pass }}' \
+        {{ ipa_client_install_flags }} \
+        --log-file=/var/local/ansible/ipa-client-install.log
+  args:
+    creates: /var/local/ansible/ipa-client-install.log
+  when: ipa_client | bool
+  tags:
+    - ipa-server
+    - config

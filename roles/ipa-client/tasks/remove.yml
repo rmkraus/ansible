@@ -1,0 +1,13 @@
+---
+# tasks file for ipa-client
+- name: remove host from ipa domain
+  ipa_host:
+    ipa_user: '{{ ipa_client_principal }}'
+    ipa_host: '{{ ipa_client_host.split(":").0 }}'
+    ipa_pass: '{{ ipa_client_pass }}'
+    name: "{{ inventory_hostname.split('.').0 }}.{{ dns_records_primary_forward_zone }}"
+    state: absent
+    validate_certs: no
+  delegate_to: localhost
+  tags:
+    - ipa-client

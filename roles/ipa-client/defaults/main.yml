@@ -1,6 +1,8 @@
 ---
 # defaults file for ipa-client
+ipa_client_action: join
 ipa_client: yes
 ipa_client_principal: admin
 ipa_client_pass: password
 ipa_client_install_flags:
+ipa_host: ipa.example.com
