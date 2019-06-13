@@ -21,6 +21,7 @@
   failed_when:
     - 'dns is failed'
     - 'dns.msg|default("") != "response dnsrecord_mod: no modifications to be performed"'
+    - 'not (dns_records_state == "absent" and (dns.msg|default("")).startswith("response dnsrecord_del: " + item.type|default("A") + " record does not contain"))'
   tags:
     - dns_records
     - dns
