@@ -62,7 +62,6 @@
       dns_records_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
     - ansible-deps
     - root-user
-    - lynis
     - ntp
     - hardening
     - monitoring
