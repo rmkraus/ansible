@@ -6,4 +6,4 @@ hardening_pass_min_len: 10
 hardening_allow_usb_drives: no
 hardening_selinux: enabled
 hardening_sebooleans: []
-hardening_default_umask: 027
+hardening_default_umask: "027"

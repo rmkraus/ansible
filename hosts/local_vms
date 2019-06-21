@@ -1,3 +1,0 @@
-[local_vms]
-rkraus-fedora ansible_host=localhost ansible_connection=local
-rhel6
