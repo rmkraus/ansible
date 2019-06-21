@@ -7,42 +7,43 @@ ipa_server_realm: LAB.RMKRA.US
 ipa_server_install_flags:
 
 dns_records_custom_records:
-  - name: _kerberos-master._tcp
-    type: SRV
-    value: '0 100 88 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _kerberos-master._udp
-    type: SRV
-    value: '0 100 88 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _kerberos._tcp
-    type: SRV
-    value: '0 100 88 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _kerberos._udp
-    type: SRV
-    value: '0 100 88 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _kerberos
-    type: TXT
-    value: '"LAB.RMKRA.US"'
-    zone: lab.rmkra.us
-  - name: _kpasswd._tcp
-    type: SRV
-    value: '0 100 464 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _kpasswd._udp
-    type: SRV
-    value: '0 100 464 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _ldap._tcp
-    type: SRV
-    value: '0 100 389 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: _ntp.udp
-    type: SRV
-    value: '0 100 123 ipa.lab.rmkra.us.'
-    zone: lab.rmkra.us
-  - name: ipa-ca
-    type: A
-    zone: lab.rmkra.us
+- name: ipa-ca
+  type: A
+  zone: lab.rmkra.us
+# SRV records are supported in Ansible 2.8
+#  - name: _kerberos-master._tcp
+#    type: SRV
+#    value: '0 100 88 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _kerberos-master._udp
+#    type: SRV
+#    value: '0 100 88 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _kerberos._tcp
+#    type: SRV
+#    value: '0 100 88 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _kerberos._udp
+#    type: SRV
+#    value: '0 100 88 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _kerberos
+#    type: TXT
+#    value: '"LAB.RMKRA.US"'
+#    zone: lab.rmkra.us
+#  - name: _kpasswd._tcp
+#    type: SRV
+#    value: '0 100 464 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _kpasswd._udp
+#    type: SRV
+#    value: '0 100 464 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _ldap._tcp
+#    type: SRV
+#    value: '0 100 389 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
+#  - name: _ntp.udp
+#    type: SRV
+#    value: '0 100 123 ipa.lab.rmkra.us.'
+#    zone: lab.rmkra.us
