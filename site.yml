@@ -41,7 +41,7 @@
         - dhcp
 
 - name: basic configuration to appliances
-  hosts: appliances
+  hosts: tag_appliances
   become: yes
   become_user: root
 
@@ -50,7 +50,7 @@
     - rhsm
 
 - name: core configuration to all hosts
-  hosts: all:!macs:!networking:!appliances
+  hosts: all:!macs:!networking:!tag_appliances
   become: yes
   become_user: root
 
