@@ -1,32 +1,26 @@
 #!/usr/bin/ansible-playbook
 ---
+
+- name: connect to secret stores
+  import_playbook: load_secrets.yml
+
 - name: remove server from the network
   hosts: "{{ stat_limit|default('all') }}"
   gather_facts: no
 
-  vars_prompt:
-  - name: "lastpass_username"
-    prompt: "LastPass Username"
-    private: no
-  - name: "lastpass_password"
-    prompt: "LastPass Master Password"
-    private: yes
-
   roles:
-    - role: lastpass
-
     - role: unifi
       unifi_action: login
       unifi_server: "{{ domain_services.unifi }}"
-      unifi_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      unifi_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      unifi_user: "{{ secrets.ansible_account }}"
+      unifi_pass: "{{ secrets.ansible_password }}"
       tags:
         - dhcp
 
     - role: dns_records
       dns_records_host: "{{ domain_services.freeipa }}"
-      dns_records_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      dns_records_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      dns_records_user: "{{ secrets.ansible_account }}"
+      dns_records_password: "{{ secrets.ansible_password }}"
       dns_records_state: absent
       dns_records_set_local: no
       tags:
@@ -35,8 +29,8 @@
     - role: pxe_boot
       pxe_boot_action: remove
       pxe_boot_server: "{{ domain_services.cobbler }}"
-      pxe_boot_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      pxe_boot_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      pxe_boot_user: "{{ secrets.ansible_account }}"
+      pxe_boot_password: "{{ secrets.ansible_password }}"
       tags:
         - pxe
 
@@ -54,6 +48,6 @@
 
     - role: ipa-client
       ipa_client_action: remove
-      ipa_client_principal: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      ipa_client_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      ipa_client_principal: "{{ secrets.ansible_account }}"
+      ipa_client_pass: "{{ secrets.ansible_password }}"
       ipa_client_host: "{{ domain_services.freeipa }}"

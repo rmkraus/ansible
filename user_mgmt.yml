@@ -1,20 +1,7 @@
 #!/usr/bin/ansible-playbook --skip-tags=email
 ---
-- name: login to LastPass
-  hosts: all
-  gather_facts: no
-  become: no
-
-  vars_prompt:
-  - name: "lastpass_username"
-    prompt: "LastPass Username"
-    private: no
-  - name: "lastpass_password"
-    prompt: "LastPass Master Password"
-    private: yes
-
-  roles:
-    - lastpass
+- name: connect to secret stores
+  import_playbook: load_secrets.yml
 
 - name: create user
   gather_facts: no
@@ -61,21 +48,21 @@
         displayname: "{{ firstname }} {{ lastname }}"
         password: "{{ password }}"
         ipa_host: "{{ domain_services.freeipa }}"
-        ipa_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-        ipa_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+        ipa_user: "{{ secrets.ansible_account }}"
+        ipa_pass: "{{ secrets.ansible_password }}"
         validate_certs: False
       delegate_to: localhost
       tags: ipa
 
     - name: create email alias
       uri:
-        url: https://{{ lookup('lastpass', 'easyDNS', field='api_server') }}/mail/maps/{{ lookup('lastpass', 'easyDNS', field='domain') }}?format=json
-        user: "{{ lookup('lastpass', 'easyDNS', field='api_token') }}"
-        password: "{{ lookup('lastpass', 'easyDNS', field='api_key') }}"
+        url: https://{{ secrets.easy_dns.api_server }}/mail/maps/{{ secrets.easy_dns.domain }}?format=json
+        user: "{{ secrets.easy_dns.api_token }}"
+        password: "{{ secrets.easy_dns.api_key }}"
         force_basic_auth: yes
         method: PUT
         body:
-          domain: "{{ lookup('lastpass', 'easyDNS', field='domain') }}"
+          domain: "{{ secrets.easy_dns.domain }}"
           host: "@"
           alias: "{{ username }}"
           destination: "{{ email }},"
@@ -90,8 +77,8 @@
       vars:
         unifi_action: login
         unifi_server: "{{ domain_services.unifi }}"
-        unifi_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-        unifi_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+        unifi_user: "{{ secrets.ansible_account }}"
+        unifi_pass: "{{ secrets.ansible_password }}"
         unifi_gather_facts: no
       delegate_to: localhost
       tags: vpn

@@ -57,7 +57,7 @@ rhsm_password: !vault |
           3937306566306566370a633537343461366634636534366337663432653265323439303834303237
           6163
 rhsm_pool: 8a85f98460bfb0470160c2ff22f13e47
-root_user_password_crypted: "{{ lookup('lastpass', 'root', field='encrypted') }}"
+root_user_password_crypted: "{{ secrets.root_user_password_crypted }}"
 root_user_ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyEmE9RgpVOEfrTih/aw7eF9r44YPYIJgqkFOkREDxSzh9T580vee5LI5NdgD8+dIFPVHjzeOGYqHudQjwPDuPNCqaYZg3+AT1+4uHeiAyQ4OvS5dLeHU4K9fX8FBCnFOpxde6rBlSnEF3+ZuMdiQAVmNPD50XmYnbohUHh+3vVam9stNAN6iZw1OWz7Q5JxDYayjyk1htAH20f0OaKR0e9xCDS4B1e+qJjUN7ZSVyAV95ojzP5NPkk0ImQhvH+rnRepPp3LYrst9CYIboH0sVU++y0zubO0wWZ5XXRmlF7qmm6Q+MKGVwO8AjCY+kRCpWB+hEkKnG85pyPsh8myHt root@lab.rmkra.us
 ssh_banner: |

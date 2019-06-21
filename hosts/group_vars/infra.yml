@@ -29,11 +29,9 @@ bind_zones:
 postfix_mynetworks: 192.168.0.0/16
 postfix_myorigin: rmkra.us
 postfix_inet_interfaces: all
-postfix_relayhost: "[{{ lookup('lastpass', 'Mailjet', field='server') }}]:587"
+postfix_relayhost: "{{ secrets.postfix_relayhost }}"
 postfix_smtp_sasl_auth_enable: yes
-postfix_sasl_entries:
-  - server: "{{ lookup('lastpass', 'Mailjet', field='server') }}"
-    auth: "{{ lookup('lastpass', 'Mailjet', field='auth') }}"
+postfix_sasl_entries: "{{ secrets.postfix_sasl_entries }}"
 
 vip_router_id_prefix: 10
 vip_configs:

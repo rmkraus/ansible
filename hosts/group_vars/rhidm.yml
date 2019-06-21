@@ -1,7 +1,7 @@
 ipa_client: no
 
-ipa_server_dm_pass: "{{ lookup('lastpass', 'root', field='password') }}"
-ipa_server_admin_pass: "{{ lookup('lastpass', 'root', field='password') }}"
+ipa_server_dm_pass: "{{ secrets.ipa_server_dm_pass }}"
+ipa_server_admin_pass: "{{ secrets.ipa_server_admin_pass }}"
 ipa_server_domain: lab.rmkra.us
 ipa_server_realm: LAB.RMKRA.US
 ipa_server_install_flags:

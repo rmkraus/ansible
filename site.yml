@@ -1,21 +1,8 @@
 #!/usr/bin/ansible-playbook
 ---
 
-- name: login to LastPass
-  hosts: all
-  gather_facts: no
-  become: no
-
-  vars_prompt:
-  - name: "lastpass_username"
-    prompt: "LastPass Username"
-    private: no
-  - name: "lastpass_password"
-    prompt: "LastPass Master Password"
-    private: yes
-
-  roles:
-    - lastpass
+- name: connect to secret stores
+  import_playbook: load_secrets.yml
 
 - name: get host information from switch
   hosts: all:!macs:!networking
@@ -25,8 +12,8 @@
     - role: unifi
       unifi_action: login
       unifi_server: "{{ domain_services.unifi }}"
-      unifi_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      unifi_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      unifi_user: "{{ secrets.ansible_account }}"
+      unifi_pass: "{{ secrets.ansible_password }}"
       tags:
         - dns_records
         - dns
@@ -58,8 +45,8 @@
     - rhsm
     - role: dns_records
       dns_records_host: "{{ domain_services.freeipa }}"
-      dns_records_user: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      dns_records_password: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      dns_records_user: "{{ secrets.ansible_account }}"
+      dns_records_password: "{{ secrets.ansible_password }}"
     - ansible-deps
     - root-user
     - ntp
@@ -68,8 +55,8 @@
     - filesystem
     - postfix
     - role: ipa-client
-      ipa_client_principal: "{{ lookup('lastpass', 'Ansible Service Account', field='username') }}"
-      ipa_client_pass: "{{ lookup('lastpass', 'Ansible Service Account', field='password') }}"
+      ipa_client_principal: "{{ secrets.ansible_account }}"
+      ipa_client_pass: "{{ secrets.ansible_password }}"
     - ssh
 
 - name: pxe boot/dhcp server

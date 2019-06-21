@@ -12,9 +12,9 @@ disks:
         fstype: xfs
         mount: /var/lib/pgsql
 
-tower_admin_password: "{{ lookup('lastpass', 'root', field='password') }}"
-tower_pg_password: "{{ lookup('lastpass', 'Tower', field='pg_password') }}"
-tower_rabbitmq_password: "{{ lookup('lastpass', 'Tower', field='rabbitmq_password') }}"
+tower_admin_password: "{{ secrets.tower_admin_password }}"
+tower_pg_password: "{{ secrets.tower_pg_password }}"
+tower_rabbitmq_password: "{{ secrets.tower_rabbitmq_password }}"
 
 tower_version: '3.5.0-1'
 tower_ssl_cert: "{{ lookup('lastpass', 'Certs/tower.lab.rmkra.us', field='cert') }}"
