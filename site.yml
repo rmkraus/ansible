@@ -118,4 +118,16 @@
     - tower
     - epel
     - lastpass-cli
+
+- name: configure interactive machines
+  hosts: tag_interactive
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - role: epel
+      epel_exclude: ansible
+    - podman
+    - interactive
 ...

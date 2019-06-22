@@ -31,9 +31,17 @@
     gpgkey: "{{ epel_gpgkey }}"
     enabled: True
     gpgcheck: "{{ epel_gpg }}"
+    exclude: "{{ epel_exclude }}"
   when:
     - ansible_distribution != 'Fedora'
   tags:
     - epel
     - repos
 
+- name: Import EPEL GPG key
+  rpm_key:
+    key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+    state: present
+  tags:
+    - epel
+    - repos

@@ -1,0 +1,22 @@
+---
+# tasks file for podman
+
+- name: ensure systems have extras repo
+  rhsm_repository:
+    name: "{{ item }}"
+    state: enabled
+  loop:
+    - rhel-7-server-extras-rpms
+    - rhel-7-server-ansible-2.7-rpms
+  tags:
+    - rhsm
+    - interactive
+
+- name: ensure interactive packages are installed
+  yum:
+    name: >
+        screen, tmux, vim, ansible, python2-ansible-tower-cli
+    state: installed
+  tags:
+    - interactive
+    - packages

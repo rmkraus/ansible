@@ -1,0 +1,18 @@
+---
+# tasks file for podman
+
+- name: ensure systems have extras repo
+  rhsm_repository:
+    name: rhel-7-server-extras-rpms
+    state: enabled
+  tags:
+    - rhsm
+    - podman
+
+- name: ensure podman packages are installed
+  yum:
+    name: podman, podman-docker, buildah, skopeo
+    state: installed
+  tags:
+    - packages
+    - podman
