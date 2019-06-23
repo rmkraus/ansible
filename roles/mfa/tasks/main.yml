@@ -5,18 +5,6 @@
     state: installed
   tags: mfa
 
-- name: ensure mfa keys are installed
-  copy:
-    dest: "{{ item.dest }}"
-    content: "{{ item.key }}"
-    owner: "{{ item.owner }}"
-    group: "{{ item.group }}"
-    mode: "0400"
-  with_items: "{{ mfa_keys }}"
-  loop_control:
-    label: "{{ item.dest }}"
-  tags: mfa
-
 - name: ensure mfa is enabled for sshd
   lineinfile:
     line: "{{ item.line }}"
@@ -28,4 +16,21 @@
     - { line: "auth required pam_google_authenticator.so nullok", dest: "/etc/pam.d/sshd", regexp: "^auth required pam_google_authenticator.so" }
     - { line: "ChallengeResponseAuthentication yes", dest: "/etc/ssh/sshd_config", regexp: "^ChallengeResponseAuthentication" }
   notify: restart sshd
+  tags: mfa
+
+- name: ensure mfa key generator is installed
+  copy:
+    src: mfa-check.sh
+    dest: /usr/local/sbin/mfa-check.sh
+    mode: 0755
+    owner: root
+    group: root
+  tags:
+    - mfa
+
+- name: ensure key usage is enforced
+  file:
+    src: /usr/local/sbin/mfa-check.sh
+    dest: /etc/profile.d/mfa-check.sh
+    state: link
   tags: mfa

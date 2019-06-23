@@ -1,0 +1,4 @@
+fail2ban_bantime: 3600
+fail2ban_jails:
+  - sshd
+  - sshd-ddos
