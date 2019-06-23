@@ -130,4 +130,16 @@
       epel_exclude: ansible
     - podman
     - interactive
+
+- name: configure edge machines
+  hosts: tag_edge
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - fail2ban
+    - mfa
+
+
 ...
