@@ -62,6 +62,7 @@
     unifi_ip: "{{ unifi_meta.json.data.0['fixed_ip'] | default(unifi_meta.json.data.0['ip'] | default('')) }}"
     unifi_ip_type: "{% if 'fixed_ip' in unifi_meta.json.data.0 %}fixed{% else %}floating{% endif %}"
     unifi_usergroup_id: "{{ unifi_meta.json.data.0['usergroup_id'] | default ('') }}"
+    cacheable: yes
   delegate_to: localhost
   become: no
   when:

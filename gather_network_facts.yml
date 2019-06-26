@@ -1,0 +1,30 @@
+#!/usr/bin/ansible-playbook
+---
+
+- name: connect to secret stores
+  import_playbook: load_secrets.yml
+
+- name: get host information from switch
+  hosts: "{{ stat_limit|default('all') }}"
+  gather_facts: no
+
+  roles:
+    - role: unifi
+      unifi_action: login
+      unifi_server: "{{ domain_services.unifi }}"
+      unifi_user: "{{ secrets.ansible_account }}"
+      unifi_pass: "{{ secrets.ansible_password }}"
+
+    - role: unifi
+      unifi_action: logout
+      unifi_server: "{{ domain_services.unifi }}"
+
+- name: set ansible facts as needed
+  hosts: "{{ stat_limit|default('all') }}"
+  gather_facts: no
+
+  tasks:
+    - name: set ansible_host
+      set_fact:
+        ansible_host: "{{ unifi_ip }}"
+        cacheable: yes
