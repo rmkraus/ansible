@@ -53,7 +53,7 @@
 
     - role: pxe_boot
       pxe_boot_action: update
-      pxe_boot_netboot: yes
+      pxe_boot_netboot: "{{ netboot | default('yes') | bool }}"
       pxe_boot_server: "{{ domain_services.cobbler }}"
       pxe_boot_user: "{{ secrets.ansible_account }}"
       pxe_boot_password: "{{ secrets.ansible_password }}"
