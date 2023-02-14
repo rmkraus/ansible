@@ -1,0 +1,6 @@
+---
+# tasks file for nvidia-driver
+
+- import_tasks: fedora.yaml
+  when:
+    - "ansible_distribution == 'Fedora'"

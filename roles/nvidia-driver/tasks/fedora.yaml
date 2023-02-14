@@ -1,0 +1,13 @@
+- name: install rpm fusion
+  ansible.builtin.package:
+    name:
+      - "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+      - "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+
+- name: install drivers
+  ansible.builtin.package:
+    name:
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia-cuda
+  handler: reboot

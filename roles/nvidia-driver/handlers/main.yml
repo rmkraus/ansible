@@ -1,0 +1,4 @@
+---
+# handlers file for nvidia-driver
+- name: reboot
+  ansible.builtin.reboot:

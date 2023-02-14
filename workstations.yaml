@@ -1,8 +1,6 @@
 - name: Workstation Setup
   hosts: dsws
   become: true
-  
-  tasks:
-  
-  - debug:
-      msg: "test"
+
+  roles:
+    - name: nvidia-driver
