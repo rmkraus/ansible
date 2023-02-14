@@ -13,6 +13,7 @@
   ansible.builtin.package:
     name:
       - vim
+      - cronie
 
 - name: ensure sshd is enabled
   ansible.builtin.service:
