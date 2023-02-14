@@ -5,11 +5,12 @@
     name: fedora-workstation-repositories
 
 - name: enable the chrome repos
-  ansible.builtin.yum_repository:
-    name: google-chrome
-    enabled: yes
+  ansible.builtin.lineinfile:
+    path: /etc/yum.repos.d/google-chrome.repo
+    line: "enabled=1"
+    regexp: "^enabled="
 
 - name: install chrome
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name:
       - google-chrome-stable
