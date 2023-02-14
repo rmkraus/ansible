@@ -26,5 +26,11 @@
     special_time: "{{ item }}"
     job: /usr/bin/ansible-pull -U https://github.com/rmkraus/ansible.git site.yaml -i inventory.ini > /var/log/config_check
   with_items:
-    - onboot
+    - reboot
     - daily
+
+- name: ensure patching is scheduled
+  ansible.builtin.cron:
+    name: system patching
+    special_time: weekly
+    job: /usr/bin/ansible-pull -U https://github.com/rmkraus/ansible.git patching.yaml -i inventory.ini > /var/log/config_check
