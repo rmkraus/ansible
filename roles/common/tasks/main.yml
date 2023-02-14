@@ -1,0 +1,10 @@
+---
+# tasks file for common
+- name: allow wheel to sudo without password
+  community.general.sudoers:
+    name: "nopasswd wheel sudo"
+    state: present
+    group: wheel
+    runas: root
+    commands: ALL
+    nopasswd: true
