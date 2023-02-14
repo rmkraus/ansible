@@ -1,0 +1,15 @@
+---
+# tasks file for google-chrome
+- name: ensure third party repos are enabled
+  ansible.builtin.package:
+    name: fedora-workstation-repositories
+
+- name: enable the chrome repos
+  ansible.builtin.yum_repository:
+    name: google-chrome
+    enabled: yes
+
+- name: install chrome
+  ansible.builtin.package:
+    name:
+      - google-chrome-stable
