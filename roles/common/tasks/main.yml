@@ -13,3 +13,18 @@
   ansible.builtin.package:
     name:
       - vim
+
+- name: ensure sshd is enabled
+  ansible.builtin.service:
+    name: sshd
+    enabled: yes
+    state: started
+
+- name: ensure config sync is scheduled
+  ansible.builtin.cron:
+    name: configuration check
+    special_time: "{{ item }}"
+    job: /usr/bin/ansible-pull -U https://github.com/rmkraus/ansible.git site.yaml -i inventory.ini > /var/log/config_check
+  with_items:
+    - onboot
+    - daily
