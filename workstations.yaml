@@ -10,3 +10,4 @@
     - name: golang
     - name: awscli
     - name: gcloud-cli
+    - name: terminator
