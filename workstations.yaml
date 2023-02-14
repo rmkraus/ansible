@@ -5,3 +5,4 @@
   roles:
     - name: common
     - name: nvidia-driver
+    - name: google-chrome
