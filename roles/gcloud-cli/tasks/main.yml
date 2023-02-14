@@ -1,0 +1,16 @@
+---
+# tasks file for gcloud-cli
+- name: ensure gcloud cli repo is configured
+  ansible.builtin.yum_repository:
+    name: gcloud
+    description: Google Cloud
+    baseurl: https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: install gcloud cli
+  ansible.builtin.package:
+    name:
+      - libxcrypt-compat.x86_64
+      - google-cloud-cli
