@@ -1,0 +1,8 @@
+- name: Workstation Setup
+  hosts: localhost
+  become: true
+  
+  tasks:
+  
+  - debug:
+      msg: "test"
