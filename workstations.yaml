@@ -2,6 +2,10 @@
   hosts: dsws
   become: true
 
+  vars:
+    docker_users:
+      - rkraus
+
   roles:
     - name: common
     - name: desktop-tools
