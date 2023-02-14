@@ -7,3 +7,4 @@
     - name: nvidia-driver
     - name: google-chrome
     - name: vscode
+    - name: golang

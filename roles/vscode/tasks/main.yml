@@ -5,8 +5,8 @@
     name: code
     description: Visual Studio Code
     baseurl: https://packages.microsoft.com/yumrepos/vscode
-    enabled: yes
-    gpgcheck: yes
+    enabled: true
+    gpgcheck: true
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
 
 - name: install vscode

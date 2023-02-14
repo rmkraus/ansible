@@ -1,0 +1,18 @@
+---
+# tasks file for golang
+- name: download golang version
+  ansible.builtin.get_url:
+    url: https://go.dev/dl/go{{ golang_version }}.{{ golang_os }}-{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}.tar.gz
+    dest: /usr/local/golang.{{ golang_version }}.tar.gz
+    mode: '0600'
+    checksum: "{{ golang_checksum }}"
+
+- name: install golang
+  ansible.builtin.unarchive:
+    src: /usr/local/golang.{{ golang_version }}.tar.gz
+    dest: /usr/local
+
+- name: configure golang paths
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: "export PATH=$PATH:/usr/local/go/bin:~/go/bin/"
