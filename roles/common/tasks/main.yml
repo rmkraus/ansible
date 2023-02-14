@@ -8,3 +8,8 @@
     runas: root
     commands: ALL
     nopassword: true
+
+- name: install common packages
+  ansible.builtin.package:
+    name:
+      - vim
