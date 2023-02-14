@@ -8,3 +8,4 @@
     - name: google-chrome
     - name: vscode
     - name: golang
+    - name: awscli
