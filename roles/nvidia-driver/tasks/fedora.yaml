@@ -10,4 +10,4 @@
     name:
       - akmod-nvidia
       - xorg-x11-drv-nvidia-cuda
-  handler: reboot
+  notify: reboot
