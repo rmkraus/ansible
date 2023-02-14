@@ -1,0 +1,17 @@
+---
+# tasks file for awscli
+- name: download awscli aws cli package
+  ansible.builtin.get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /usr/local/awscli.zip
+    mode: '0600'
+
+- name: extract awscli package
+  ansible.builtin.unarchive:
+    src: /usr/local/awscli.zip
+    dest: /usr/local
+  register: awscli
+
+- name: install awscli
+  ansible.builtin.command: /usr/local/aws/install
+  when: awscli is changed
