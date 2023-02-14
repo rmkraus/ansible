@@ -5,7 +5,7 @@
     url: https://go.dev/dl/go{{ golang_version }}.{{ golang_os }}-{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}.tar.gz
     dest: /usr/local/golang.{{ golang_version }}.tar.gz
     mode: '0600'
-    checksum: "{{ golang_checksum }}"
+    checksum: "{{ golang_checksum[golang_os][ansible_architecture] }}"
 
 - name: install golang
   ansible.builtin.unarchive:

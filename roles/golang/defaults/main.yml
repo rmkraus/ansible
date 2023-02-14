@@ -2,5 +2,7 @@
 # defaults file for golang
 # available versions here: https://go.dev/dl/
 golang_version: 1.20.1
-golang_checksum: "sha256:b5c1a3af52c385a6d1c76aed5361cf26459023980d0320de7658bae3915831a2"
+golang_checksum:
+  linux:
+    x86_64: "sha256:000a5b1fca4f75895f78befeb2eecf10bfff3c428597f3f1e69133b63b911b02"
 golang_os: linux
