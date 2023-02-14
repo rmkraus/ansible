@@ -6,3 +6,4 @@
     - name: common
     - name: nvidia-driver
     - name: google-chrome
+    - name: vscode
