@@ -2,4 +2,6 @@
 # tasks file for terminator
 - name: install terminator
   ansible.builtin.package:
-    name: terminator
+    name:
+      - terminator
+      - distrobox

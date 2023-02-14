@@ -4,10 +4,11 @@
 
   roles:
     - name: common
+    - name: desktop-tools
     - name: nvidia-driver
     - name: google-chrome
     - name: vscode
     - name: golang
     - name: awscli
     - name: gcloud-cli
-    - name: terminator
+    - name: docker
