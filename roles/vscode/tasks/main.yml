@@ -1,0 +1,15 @@
+---
+# tasks file for vscode
+- name: ensure vscode repo is configured
+  ansible.builtin.yum_repository:
+    name: code
+    description: Visual Studio Code
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+- name: install vscode
+  ansible.builtin.packages:
+    name:
+      - code
