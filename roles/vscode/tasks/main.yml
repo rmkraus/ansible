@@ -10,6 +10,6 @@
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
 
 - name: install vscode
-  ansible.builtin.packages:
+  ansible.builtin.package:
     name:
       - code
