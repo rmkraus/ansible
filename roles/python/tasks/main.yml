@@ -1,0 +1,6 @@
+---
+# tasks file for python
+- name: ensure pip is available
+  ansible.builtin.package:
+    name:
+      - python3-pip

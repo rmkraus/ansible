@@ -16,3 +16,4 @@
     - name: awscli
     - name: gcloud-cli
     - name: docker
+    - name: python
