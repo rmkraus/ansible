@@ -1,0 +1,78 @@
+- name: query published sunshine releases
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/LizardByte/Sunshine/releases
+    body_format: json
+  register: sunshine_releases
+  until: sunshine_releases is not failed
+  retries: 5
+  delay: 10
+
+- name: save the desired version number
+  ansible.builtin.lineinfile:
+    path: "/root/sunshine-desired-version-cache"
+    line: "{{ sunshine_releases.json[0].name }}"
+    create: yes
+  register: sunshine_version_cache
+
+- when: sunshine_version_cache.changed
+  block:
+  - name: calculate preferred package file extension
+    set_fact:
+      package_ext: "{% if ansible_distribution == 'Fedora' %}rpm{% elif ansible_distribution=='Ubuntu' %}deb{% endif %}"
+
+  - name: calculate cpu architecture
+    set_fact:
+      cpu_arch: "{% if ansible_architecture == 'x86_64' %}amd64{% else %}{{ ansible_architecture }}{% endif %}"
+
+  - name: calculate desired install file
+    set_fact:
+      sunshine_fname: "sunshine-{{ ansible_distribution.lower() }}-{{ ansible_distribution_version }}-{{ cpu_arch }}.{{ package_ext }}"
+
+  - name: download sunshine installer
+    ansible.builtin.get_url:
+      url: "https://github.com/LizardByte/Sunshine/releases/download/{{ sunshine_releases.json[0].name }}/{{ sunshine_fname }}"
+      dest: "/root/{{ sunshine_fname}}"
+      mode: "0600"
+
+  - name: install sunshine package
+    ansible.builtin.package:
+      name: "/root/{{ sunshine_fname }}"
+      disable_gpg_check: true
+
+- name: ensure uinput is configured
+  ansible.builtin.lineinfile:
+    path: /etc/udev/rules.d/85-sunshine-input.rules
+    line: 'KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"'
+    create: true
+
+- name: ensure gnome is configured for software mouse rendering
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/sw_mouse.sh
+    line: 'export MUTTER_DEBUG_DISABLE_HW_CURSORS=1'
+    create: true
+
+- name: ensure config directory exists
+  ansible.builtin.file:
+    path: "~{{ sunshine_user }}/.config"
+    state: directory
+    mode: "0700"
+    owner: "{{ sunshine_user }}"
+
+- name: add user to input group
+  ansible.builtin.user:
+    name: "{{ sunshine_user }}"
+    groups:
+      - input
+    append: true
+
+- name: install the systemctl service
+  ansible.builtin.template:
+    src: sunshine.service.j2
+    dest: /etc/systemd/system/sunshine.service
+
+- name: ensure sunshine is running and enabled
+  ansible.builtin.systemd:
+    name: sunshine
+    state: started
+    enabled: true
+    daemon_reload: true

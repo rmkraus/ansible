@@ -1,0 +1,14 @@
+[Unit]
+Description=Sunshine self-hosted game stream host for Moonlight.
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/bin/sunshine
+Restart=on-failure
+RestartSec=5s
+User={{ sunshine_user }}
+Group={{ sunshine_user }}
+
+[Install]
+WantedBy=graphical-session.target

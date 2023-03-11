@@ -1,0 +1,7 @@
+- name: testing
+  become: true
+  hosts: localhost
+
+  roles:
+    - name: sunshine-streaming
+      sunshine_user: rkraus
