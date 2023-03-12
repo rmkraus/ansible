@@ -18,4 +18,4 @@
     - name: docker
     - name: python
     - name: sunshine-streaming
-      sunshine_user: rkraus
+      sunshine_user: root
